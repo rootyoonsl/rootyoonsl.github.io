@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 :root {
+  --site-header-height: 66px;
   --viewport-background: #ffffff;
   --background: #ffffff;
   --surface: #f6f6f7;
@@ -372,7 +373,7 @@ html.sunset.dark .sunset-theme-cover::after {
   border-radius: 6px;
   background: var(--foreground);
   color: var(--background);
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .skip-link:focus {
@@ -381,7 +382,7 @@ html.sunset.dark .sunset-theme-cover::after {
 
 /* Header */
 .site-header {
-  height: 56px;
+  height: var(--site-header-height);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -422,7 +423,7 @@ html.sunset.dark .sunset-theme-cover::after {
   display: flex;
   flex-direction: column;
   font-family: var(--logo-font);
-  font-size: clamp(12px, 0.695vw, 14.4px);
+  font-size: clamp(13px, 0.752vw, 15.6px);
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 0.92;
@@ -430,7 +431,7 @@ html.sunset.dark .sunset-theme-cover::after {
 
 .primary-nav {
   --nav-item-width: clamp(64px, 3.7vw, 76.8px);
-  --nav-item-gap: clamp(10px, 0.58vw, 12px);
+  --nav-item-gap: clamp(14px, 0.81vw, 16.8px);
 
   height: 100%;
   position: relative;
@@ -447,7 +448,7 @@ html.sunset.dark .sunset-theme-cover::after {
   justify-content: center;
   color: var(--muted);
   font-family: var(--article-serif);
-  font-size: clamp(13px, 0.752vw, 15.6px);
+  font-size: clamp(14px, 0.81vw, 16.8px);
   font-weight: 600;
   letter-spacing: -0.012em;
   white-space: nowrap;
@@ -514,7 +515,7 @@ html.sunset.dark .sunset-theme-cover::after {
   width: 148px;
   height: 34px;
   position: fixed;
-  top: 11px;
+  top: calc((var(--site-header-height) - 34px) / 2);
   right: max(
     20px,
     calc((100% - clamp(1120px, 64.8vw, 1344px)) / 2)
@@ -629,7 +630,7 @@ html.theme-transitioning:not(.sunset) .sunset-theme-cover {
   outline: 0;
   background: transparent;
   color: var(--foreground);
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .search-input-row input::placeholder {
@@ -658,7 +659,7 @@ html.theme-transitioning:not(.sunset) .sunset-theme-cover {
 
 .search-category {
   color: var(--accent-strong);
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 600;
 }
 
@@ -672,7 +673,7 @@ html.theme-transitioning:not(.sunset) .sunset-theme-cover {
 
 .search-result-copy strong {
   overflow: hidden;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 550;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -681,14 +682,14 @@ html.theme-transitioning:not(.sunset) .sunset-theme-cover {
 .search-result-copy small {
   flex: 0 0 auto;
   color: var(--faint);
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .search-empty {
   margin: 0;
   padding: 60px 16px;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 14px;
   text-align: center;
 }
 
@@ -700,7 +701,7 @@ html.theme-transitioning:not(.sunset) .sunset-theme-cover {
   align-items: center;
   justify-content: space-between;
   color: var(--faint);
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .search-hint kbd {
@@ -786,7 +787,7 @@ html.theme-transitioning:not(.sunset) .sunset-theme-cover {
   background: transparent;
   color: #fff;
   font-family: var(--article-serif);
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   text-shadow: 0 1px 12px rgba(15, 13, 26, 0.45);
   transition:
@@ -920,7 +921,7 @@ html.sunset:not(.dark) .compact-writing-list {
   justify-self: center;
   color: var(--muted);
   font-family: var(--article-serif);
-  font-size: clamp(14px, 0.81vw, 16.8px);
+  font-size: clamp(15px, 0.868vw, 18px);
   font-weight: 600;
   font-variant-numeric: normal;
   transform-origin: center;
@@ -937,7 +938,7 @@ html.sunset:not(.dark) .compact-writing-list {
 
 .compact-writing-date {
   color: var(--muted);
-  font-size: clamp(11px, 0.637vw, 13.2px);
+  font-size: clamp(12px, 0.695vw, 14.4px);
   font-variant-numeric: tabular-nums;
 }
 
@@ -969,7 +970,7 @@ html.sunset:not(.dark) .compact-writing-list {
   overflow: hidden;
   color: var(--muted);
   display: -webkit-box;
-  font-size: clamp(13px, 0.752vw, 15.6px);
+  font-size: clamp(14px, 0.81vw, 16.8px);
   line-height: 1.55;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
@@ -1063,7 +1064,7 @@ html.sunset:not(.dark) .compact-writing-list {
   background: transparent;
   color: var(--muted);
   font-family: var(--article-serif);
-  font-size: 11px;
+  font-size: 13px;
   font-variant-numeric: normal;
   cursor: pointer;
 }
@@ -1101,7 +1102,7 @@ html.sunset:not(.dark) .compact-writing-list {
   border-radius: 5px;
   background: var(--background);
   color: var(--muted);
-  font-size: 11px;
+  font-size: 13px;
   cursor: pointer;
 }
 
@@ -1126,7 +1127,7 @@ html.sunset:not(.dark) .compact-writing-list {
   align-items: center;
   gap: 6px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .back-link:hover {
@@ -1152,20 +1153,20 @@ html.sunset:not(.dark) .compact-writing-list {
   display: flex;
   gap: 7px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .article-toc {
   width: clamp(140px, calc(50vw - 365px), 190px);
   position: fixed;
-  top: 86px;
+  top: calc(var(--site-header-height) + 30px);
   left: calc(50% + clamp(351px, 20.3vw, 416px));
   z-index: 20;
   padding-left: 13px;
   border-left: 1px solid var(--line);
   color: var(--muted);
   font-family: var(--article-sans);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .article-toc-list {
@@ -1255,7 +1256,7 @@ html.sunset:not(.dark)
     );
   color: var(--article-foreground);
   font-family: var(--article-serif);
-  font-size: clamp(14px, 0.81vw, 16.8px);
+  font-size: clamp(15px, 0.868vw, 18px);
   letter-spacing: -0.01em;
   line-height: 1.68;
   box-shadow: var(--article-paper-shadow);
@@ -1264,7 +1265,7 @@ html.sunset:not(.dark)
 }
 
 #article-body {
-  scroll-margin-top: 76px;
+  scroll-margin-top: calc(var(--site-header-height) + 20px);
 }
 
 .markdown-body > :first-child {
@@ -1288,7 +1289,7 @@ html.sunset:not(.dark)
   font-weight: 700;
   letter-spacing: 0;
   line-height: 1.45;
-  scroll-margin-top: 76px;
+  scroll-margin-top: calc(var(--site-header-height) + 20px);
 }
 
 .markdown-heading--1 {
@@ -1446,7 +1447,7 @@ html.sunset:not(.dark)
   border-radius: 6px;
   background: var(--article-code-surface);
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.55;
   tab-size: 2;
 }
@@ -1523,7 +1524,7 @@ html.sunset:not(.dark)
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: 12px;
+  font-size: 13px;
   opacity: 0.96;
   transition:
     background-color 220ms ease,
@@ -1553,14 +1554,14 @@ a.article-nav-tab:focus-visible {
 
 .article-nav-label {
   color: var(--muted);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 500;
 }
 
 .article-nav-title {
   overflow: hidden;
   color: var(--foreground);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   line-height: 1.35;
   text-overflow: ellipsis;
@@ -1594,7 +1595,7 @@ a.article-nav-tab:focus-visible {
 
 /* Book library */
 .book-library-root {
-  min-height: calc(100svh - 56px);
+  min-height: calc(100svh - var(--site-header-height));
   margin-inline: auto;
   padding: 32px 0 72px;
 }
@@ -1656,7 +1657,7 @@ a.article-nav-tab:focus-visible {
   overflow: hidden;
   display: block;
   color: var(--foreground);
-  font-size: clamp(14px, 0.81vw, 16.8px);
+  font-size: clamp(15px, 0.868vw, 18px);
   font-weight: 650;
   letter-spacing: -0.025em;
   line-height: 1.35;
@@ -1668,7 +1669,7 @@ a.article-nav-tab:focus-visible {
   min-width: 0;
   overflow: hidden;
   color: var(--muted);
-  font-size: clamp(12px, 0.695vw, 14.4px);
+  font-size: clamp(13px, 0.752vw, 15.6px);
   line-height: 1.3;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1697,13 +1698,13 @@ a.article-nav-tab:focus-visible {
   border: 1px solid var(--line);
   border-radius: 6px;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 14px;
   text-align: center;
 }
 
 /* Playlist */
 .playlist-browser {
-  height: calc(100svh - 56px);
+  height: calc(100svh - var(--site-header-height));
   margin-inline: auto;
   padding: 24px 0 36px;
   display: grid;
@@ -1873,7 +1874,7 @@ a.article-nav-tab:focus-visible {
   color: var(--article-foreground);
   cursor: grab;
   font-family: var(--article-serif);
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 400;
   letter-spacing: -0.01em;
   line-height: 1.68;
@@ -1918,7 +1919,7 @@ a.article-nav-tab:focus-visible {
 .playlist-lyrics-prompt {
   margin: 0;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 14px;
   letter-spacing: -0.015em;
 }
 
@@ -1959,7 +1960,7 @@ html.sunset:not(.dark) .playlist-browser-table-wrap {
   width: 100%;
   border-collapse: collapse;
   table-layout: fixed;
-  font-size: clamp(14px, 0.81vw, 16.8px);
+  font-size: clamp(15px, 0.868vw, 18px);
 }
 
 .playlist-browser-caption {
@@ -1985,12 +1986,14 @@ html.sunset:not(.dark) .playlist-browser-table-wrap {
   z-index: 1;
   background: var(--surface);
   color: var(--faint);
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 600;
 }
 
 .playlist-browser-table td {
-  height: calc((100svh - 269px) / 10);
+  height: calc(
+    (100svh - var(--site-header-height) - 213px) / 10
+  );
 }
 
 .playlist-browser-table tbody td {
@@ -2206,7 +2209,7 @@ html.sunset.dark .playlist-browser-table th {
 .playlist-browser-empty {
   padding: 40px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
   text-align: center;
 }
 
@@ -2229,7 +2232,7 @@ html.sunset.dark .playlist-browser-table th {
   background: transparent;
   color: var(--muted);
   font-family: var(--article-serif);
-  font-size: 12px;
+  font-size: 13px;
   font-variant-numeric: normal;
   cursor: pointer;
 }
@@ -2285,7 +2288,7 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
 
 /* Photo gallery */
 .photo-gallery-root {
-  min-height: calc(100svh - 56px);
+  min-height: calc(100svh - var(--site-header-height));
   margin-inline: auto;
   padding: 32px 0 72px;
 }
@@ -2330,7 +2333,7 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
   margin-top: 2px;
   color: var(--accent-strong);
   font-family: var(--article-sans);
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 600;
   font-feature-settings: normal;
   font-variant-numeric: normal;
@@ -2356,7 +2359,7 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
 
 .filter-menu-label {
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
   text-align: right;
   white-space: nowrap;
 }
@@ -2377,7 +2380,7 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
     inset 0 1px 0 rgba(255, 255, 255, 0.12),
     0 4px 14px rgba(30, 26, 29, 0.035);
   color: var(--foreground);
-  font-size: 13px;
+  font-size: 14px;
   text-align: left;
   cursor: pointer;
   transition:
@@ -2422,7 +2425,7 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
 .filter-menu-trigger-count {
   color: var(--faint);
   font-family: var(--article-serif);
-  font-size: 11px;
+  font-size: 12px;
   font-variant-numeric: normal;
 }
 
@@ -2470,7 +2473,7 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 650;
   letter-spacing: 0.04em;
 }
@@ -2508,7 +2511,7 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
   gap: 10px;
   background: transparent;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 14px;
   text-align: left;
   cursor: pointer;
   transition:
@@ -2540,7 +2543,7 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
 .filter-menu-option-count {
   color: var(--faint);
   font-family: var(--article-serif);
-  font-size: 11px;
+  font-size: 12px;
   font-variant-numeric: normal;
 }
 
@@ -2631,7 +2634,7 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
   );
 
   position: fixed;
-  inset: 56px 0 0;
+  inset: var(--site-header-height) 0 0;
   z-index: 400;
   padding:
     var(--photo-lightbox-y-gap)
@@ -2687,7 +2690,7 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
   height: min(
     80dvh,
     calc(
-      100dvh - 56px - var(--photo-lightbox-y-gap) -
+      100dvh - var(--site-header-height) - var(--photo-lightbox-y-gap) -
         var(--photo-lightbox-y-gap)
     )
   );
@@ -2712,7 +2715,7 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
   max-height: min(
     80dvh,
     calc(
-      100dvh - 56px - var(--photo-lightbox-y-gap) -
+      100dvh - var(--site-header-height) - var(--photo-lightbox-y-gap) -
         var(--photo-lightbox-y-gap)
     )
   );
@@ -2820,7 +2823,7 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
 
 /* 404 */
 .not-found {
-  min-height: calc(100svh - 56px);
+  min-height: calc(100svh - var(--site-header-height));
   padding: 40px 0;
   display: flex;
   flex-direction: column;
@@ -2830,7 +2833,7 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
 
 .not-found > span {
   color: var(--accent-strong);
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .not-found h1 {
@@ -2844,7 +2847,7 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
 .not-found p {
   margin: 0;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .not-found a {
@@ -2853,7 +2856,7 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
   align-items: center;
   gap: 6px;
   color: var(--accent-strong);
-  font-size: 12px;
+  font-size: 13px;
 }
 
 @media (min-width: 1729px) {
@@ -2868,7 +2871,7 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
   .home-navigation a {
     min-width: clamp(88px, 5.095vw, 105.6px);
     height: clamp(36px, 2.084vw, 43.2px);
-    font-size: clamp(14px, 0.81vw, 16.8px);
+    font-size: clamp(15px, 0.868vw, 18px);
   }
 
   .simple-article-header h1 {
@@ -2877,11 +2880,11 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
 
   .back-link,
   .simple-article-header p {
-    font-size: clamp(12px, 0.695vw, 14.4px);
+    font-size: clamp(13px, 0.752vw, 15.6px);
   }
 
   .article-toc {
-    font-size: clamp(11px, 0.637vw, 13.2px);
+    font-size: clamp(12px, 0.695vw, 14.4px);
   }
 }
 
@@ -2898,7 +2901,9 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
   }
 
   .playlist-browser-table td {
-    height: calc((100svh - 261px) / 10);
+    height: calc(
+      (100svh - var(--site-header-height) - 205px) / 10
+    );
   }
 
   .playlist-browser-thumbnail-link {
@@ -2935,7 +2940,7 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
 
   .playlist-lyrics {
     padding-top: 10px;
-    font-size: 13px;
+    font-size: 15px;
     line-height: 1.68;
   }
 }
@@ -3020,9 +3025,9 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
 
   .primary-nav {
     width: min(300px, 84vw);
-    height: calc(100dvh - 56px);
+    height: calc(100dvh - var(--site-header-height));
     position: fixed;
-    top: 56px;
+    top: var(--site-header-height);
     right: 0;
     left: auto;
     z-index: 102;
@@ -3079,7 +3084,7 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
 
   .mobile-nav-backdrop {
     position: fixed;
-    inset: 56px 0 0;
+    inset: var(--site-header-height) 0 0;
     z-index: 100;
     display: block;
     border: 0;
@@ -3154,7 +3159,7 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
   }
 
   .compact-writing-date {
-    font-size: 10px;
+    font-size: 12px;
   }
 
   .compact-writing-thumbnail {
@@ -3173,7 +3178,7 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
 
   .markdown-body {
     padding: 22px 18px 26px;
-    font-size: 14px;
+    font-size: 15px;
     line-height: 1.68;
   }
 
@@ -3189,7 +3194,7 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
 
   .playlist-browser {
     height: auto;
-    min-height: calc(100svh - 56px);
+    min-height: calc(100svh - var(--site-header-height));
     overflow: visible;
     grid-template-rows: auto auto;
   }
@@ -3239,7 +3244,7 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
   }
 
   .playlist-browser-table {
-    font-size: 13px;
+    font-size: 14px;
   }
 
   .playlist-browser-table td {
@@ -3303,12 +3308,12 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
   }
 
   .filter-menu {
-    grid-template-columns: 48px minmax(0, 1fr);
+    grid-template-columns: 54px minmax(0, 1fr);
     gap: 7px;
   }
 
   .filter-menu-label {
-    font-size: 12px;
+    font-size: 13px;
   }
 
   .filter-menu-popover {
@@ -3361,11 +3366,11 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
   }
 
   .compact-writing-copy strong {
-    font-size: 14px;
+    font-size: 15px;
   }
 
   .compact-writing-summary {
-    font-size: 11.5px;
+    font-size: 13px;
     -webkit-line-clamp: 2;
   }
 
@@ -3427,11 +3432,11 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
   }
 
   .book-library-card-title {
-    font-size: 13px;
+    font-size: 15px;
   }
 
   .book-library-card-author {
-    font-size: 11px;
+    font-size: 13px;
   }
 
   .photo-gallery-grid {
@@ -3453,7 +3458,7 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
   .compact-writing-number {
     width: 26px;
     height: 26px;
-    font-size: 14px;
+    font-size: 15px;
   }
 
   .compact-writing-copy strong {

@@ -46,7 +46,7 @@ export function ArticleTableOfContents({
         for (const id of targetIds) {
           const target = document.getElementById(id);
           if (!target) continue;
-          if (target.getBoundingClientRect().top <= 96) {
+          if (target.getBoundingClientRect().top <= 106) {
             nextActiveId = id;
           } else {
             break;

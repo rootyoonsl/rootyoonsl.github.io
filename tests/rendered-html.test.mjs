@@ -437,7 +437,7 @@ test("book and music filters share a polished scalable menu", async () => {
   assert.doesNotMatch(css, /\.filter-menu-option-mark/u);
   assert.match(
     css,
-    /\.filter-menu-option\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\) auto;[^}]*gap:\s*10px;[^}]*font-size:\s*13px/u,
+    /\.filter-menu-option\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\) auto;[^}]*gap:\s*10px;[^}]*font-size:\s*14px/u,
   );
   assert.match(filterMenu, /event\.key === "ArrowDown"/u);
   assert.match(filterMenu, /event\.key === "Escape"/u);
@@ -467,7 +467,7 @@ test("book and music filters share a polished scalable menu", async () => {
   );
   assert.match(
     css,
-    /\.filter-menu-trigger\s*\{[^}]*height:\s*36px;[^}]*background:\s*var\(--filter-menu-background\);[^}]*font-size:\s*13px/u,
+    /\.filter-menu-trigger\s*\{[^}]*height:\s*36px;[^}]*background:\s*var\(--filter-menu-background\);[^}]*font-size:\s*14px/u,
   );
   assert.match(
     css,
@@ -602,7 +602,7 @@ test("articles use the restored serif stack on a quiet paper surface", async () 
   assert.doesNotMatch(css, /Yoonsl Maru Buri/u);
   assert.match(
     css,
-    /\.markdown-body\s*\{[\s\S]*?padding:[\s\S]*?clamp\(26px,\s*1\.5vw,\s*31px\)[\s\S]*?clamp\(28px,\s*1\.62vw,\s*34px\)[\s\S]*?clamp\(32px,\s*1\.85vw,\s*38px\);[\s\S]*?border:\s*0;[\s\S]*?background-color:\s*var\(--article-paper\);[\s\S]*?radial-gradient\([\s\S]*?font-family:\s*var\(--article-serif\);[\s\S]*?font-size:\s*clamp\(14px,\s*0\.81vw,\s*16\.8px\);[\s\S]*?letter-spacing:\s*-0\.01em/u,
+    /\.markdown-body\s*\{[\s\S]*?padding:[\s\S]*?clamp\(26px,\s*1\.5vw,\s*31px\)[\s\S]*?clamp\(28px,\s*1\.62vw,\s*34px\)[\s\S]*?clamp\(32px,\s*1\.85vw,\s*38px\);[\s\S]*?border:\s*0;[\s\S]*?background-color:\s*var\(--article-paper\);[\s\S]*?radial-gradient\([\s\S]*?font-family:\s*var\(--article-serif\);[\s\S]*?font-size:\s*clamp\(15px,\s*0\.868vw,\s*18px\);[\s\S]*?letter-spacing:\s*-0\.01em/u,
   );
   assert.match(
     css,
@@ -635,7 +635,7 @@ test("articles use the restored serif stack on a quiet paper surface", async () 
   );
   assert.match(markdownComponent, /id=\{headingAnchor\(node\)\}/u);
   assert.match(tocComponent, /requestAnimationFrame/u);
-  assert.match(tocComponent, /getBoundingClientRect\(\)\.top <= 96/u);
+  assert.match(tocComponent, /getBoundingClientRect\(\)\.top <= 106/u);
   assert.match(tocComponent, /aria-current=/u);
   assert.match(tocComponent, /event\.preventDefault\(\)/u);
   assert.match(
@@ -694,7 +694,7 @@ test("articles use the restored serif stack on a quiet paper surface", async () 
   assert.match(css, /\.markdown-table\s*\{[\s\S]*?font-size:\s*0\.95em/u);
   assert.match(
     css,
-    /\.article-toc\s*\{[\s\S]*?position:\s*fixed;[\s\S]*?top:\s*86px;[\s\S]*?left:\s*calc\(50% \+ clamp\(351px,\s*20\.3vw,\s*416px\)\)/u,
+    /\.article-toc\s*\{[\s\S]*?position:\s*fixed;[\s\S]*?top:\s*calc\(var\(--site-header-height\) \+ 30px\);[\s\S]*?left:\s*calc\(50% \+ clamp\(351px,\s*20\.3vw,\s*416px\)\)/u,
   );
   assert.match(
     css,
@@ -1029,7 +1029,7 @@ test("gallery lightbox keeps viewport sizing and a smooth closing phase", async 
   );
   assert.match(
     css,
-    /\.photo-lightbox\s*\{[\s\S]*?--photo-lightbox-y-gap:\s*max\([\s\S]*?inset:\s*56px 0 0;[\s\S]*?padding:[\s\S]*?var\(--photo-lightbox-y-gap\)[\s\S]*?place-items:\s*center/u,
+    /\.photo-lightbox\s*\{[\s\S]*?--photo-lightbox-y-gap:\s*max\([\s\S]*?inset:\s*var\(--site-header-height\) 0 0;[\s\S]*?padding:[\s\S]*?var\(--photo-lightbox-y-gap\)[\s\S]*?place-items:\s*center/u,
   );
   assert.match(
     css,
@@ -1037,7 +1037,7 @@ test("gallery lightbox keeps viewport sizing and a smooth closing phase", async 
   );
   assert.match(
     css,
-    /\.photo-lightbox-photo-button\[data-orientation="landscape"\][\s\S]*?max-height:\s*min\([\s\S]*?80dvh,[\s\S]*?100dvh - 56px - var\(--photo-lightbox-y-gap\)/u,
+    /\.photo-lightbox-photo-button\[data-orientation="landscape"\][\s\S]*?max-height:\s*min\([\s\S]*?80dvh,[\s\S]*?100dvh - var\(--site-header-height\) - var\(--photo-lightbox-y-gap\)/u,
   );
   assert.match(css, /\.photo-lightbox-image[\s\S]*?object-fit:\s*contain/u);
   assert.match(css, /\.photo-lightbox-close[\s\S]*?border-radius:\s*50%/u);
@@ -1208,7 +1208,7 @@ test("music selection ignores wheel input and the album art fills the CD", async
   );
   assert.match(
     css,
-    /\.playlist-lyrics\s*\{[\s\S]*?border:\s*0;[\s\S]*?border-radius:\s*6px;[\s\S]*?overflow-y:\s*auto;[\s\S]*?scrollbar-width:\s*none;[\s\S]*?background-color:\s*var\(--article-paper\);[\s\S]*?color:\s*var\(--article-foreground\);[\s\S]*?cursor:\s*grab;[\s\S]*?font-family:\s*var\(--article-serif\);[\s\S]*?font-size:\s*14px;[\s\S]*?line-height:\s*1\.68/u,
+    /\.playlist-lyrics\s*\{[\s\S]*?border:\s*0;[\s\S]*?border-radius:\s*6px;[\s\S]*?overflow-y:\s*auto;[\s\S]*?scrollbar-width:\s*none;[\s\S]*?background-color:\s*var\(--article-paper\);[\s\S]*?color:\s*var\(--article-foreground\);[\s\S]*?cursor:\s*grab;[\s\S]*?font-family:\s*var\(--article-serif\);[\s\S]*?font-size:\s*15px;[\s\S]*?line-height:\s*1\.68/u,
   );
   assert.match(
     css,
@@ -1220,7 +1220,7 @@ test("music selection ignores wheel input and the album art fills the CD", async
   );
   assert.match(
     css,
-    /\.playlist-lyrics-prompt\s*\{[\s\S]*?color:\s*var\(--muted\);[\s\S]*?font-size:\s*13px/u,
+    /\.playlist-lyrics-prompt\s*\{[\s\S]*?color:\s*var\(--muted\);[\s\S]*?font-size:\s*14px/u,
   );
   assert.match(
     css,
@@ -1336,15 +1336,15 @@ test("music selection ignores wheel input and the album art fills the CD", async
   );
   assert.match(
     css,
-    /\.playlist-browser-table td\s*\{[\s\S]*?height:\s*calc\(\(100svh - 269px\) \/ 10\)/u,
+    /\.playlist-browser-table td\s*\{[^}]*height:\s*calc\(\s*\(100svh - var\(--site-header-height\) - 213px\) \/ 10\s*\)/u,
   );
   assert.match(
     css,
-    /@media \(max-height:\s*700px\) and \(min-width:\s*761px\)[\s\S]*?\.playlist-browser-table td\s*\{[\s\S]*?height:\s*calc\(\(100svh - 261px\) \/ 10\)/u,
+    /@media \(max-height:\s*700px\) and \(min-width:\s*761px\)[\s\S]*?\.playlist-browser-table td\s*\{[^}]*height:\s*calc\(\s*\(100svh - var\(--site-header-height\) - 205px\) \/ 10\s*\)/u,
   );
   assert.match(
     css,
-    /\.playlist-browser-table\s*\{[\s\S]*?font-size:\s*14px/u,
+    /\.playlist-browser-table\s*\{[^}]*font-size:\s*clamp\(15px,\s*0\.868vw,\s*18px\)/u,
   );
   assert.doesNotMatch(css, /\.playlist-cd-(?:copy|title|artist)\s*\{/u);
   assert.doesNotMatch(css, /width:\s*calc\(100% - 378px\)/u);
@@ -1387,7 +1387,7 @@ test("site numerals use the literary serif and both pagers share five-page group
   );
   assert.match(
     css,
-    /\.compact-writing-number\s*\{[\s\S]*?font-family:\s*var\(--article-serif\);[\s\S]*?font-size:\s*14px[\s\S]*?font-variant-numeric:\s*normal/u,
+    /\.compact-writing-number\s*\{[\s\S]*?font-family:\s*var\(--article-serif\);[\s\S]*?font-size:\s*clamp\(15px,\s*0\.868vw,\s*18px\)[\s\S]*?font-variant-numeric:\s*normal/u,
   );
   assert.match(
     css,
@@ -1484,6 +1484,22 @@ test("all four spaces and the header share one content width", async () => {
 
   assert.match(
     css,
+    /:root\s*\{[^}]*--site-header-height:\s*66px;/u,
+  );
+  assert.match(
+    css,
+    /\.site-header\s*\{[^}]*height:\s*var\(--site-header-height\);/u,
+  );
+  assert.match(
+    css,
+    /\.primary-nav\s*\{[^}]*--nav-item-width:\s*clamp\(64px,\s*3\.7vw,\s*76\.8px\);[^}]*--nav-item-gap:\s*clamp\(14px,\s*0\.81vw,\s*16\.8px\);/u,
+  );
+  assert.match(
+    css,
+    /\.primary-nav > a\s*\{[^}]*font-family:\s*var\(--article-serif\);[^}]*font-size:\s*clamp\(14px,\s*0\.81vw,\s*16\.8px\);/u,
+  );
+  assert.match(
+    css,
     /\.header-inner,[\s\S]*?\.writing-page\.section-shell,[\s\S]*?\.book-library-root,[\s\S]*?\.playlist-browser,[\s\S]*?\.photo-gallery-root\s*\{[\s\S]*?width:\s*min\([\s\S]*?clamp\(1120px,\s*64\.8vw,\s*1344px\),[\s\S]*?calc\(100% - 40px\)/u,
   );
   assert.match(css, /\.space-page\s*\{[\s\S]*?padding-top:\s*32px/u);
@@ -1497,7 +1513,7 @@ test("all four spaces and the header share one content width", async () => {
   );
   assert.match(
     css,
-    /\.header-actions\s*\{[\s\S]*?width:\s*148px;[\s\S]*?position:\s*fixed;[\s\S]*?top:\s*11px;[\s\S]*?right:\s*max\([\s\S]*?20px,[\s\S]*?calc\(\(100% - clamp\(1120px,\s*64\.8vw,\s*1344px\)\) \/ 2\)[\s\S]*?\)/u,
+    /\.header-actions\s*\{[\s\S]*?width:\s*148px;[\s\S]*?position:\s*fixed;[\s\S]*?top:\s*calc\(\(var\(--site-header-height\) - 34px\) \/ 2\);[\s\S]*?right:\s*max\([\s\S]*?20px,[\s\S]*?calc\(\(100% - clamp\(1120px,\s*64\.8vw,\s*1344px\)\) \/ 2\)[\s\S]*?\)/u,
   );
   assert.match(
     css,
@@ -1519,6 +1535,50 @@ test("all four spaces and the header share one content width", async () => {
     css,
     /\.search-results\s*\{[\s\S]*?overflow-y:\s*auto/u,
     "스크롤바를 숨겨도 검색 결과 스크롤은 유지해야 합니다.",
+  );
+});
+
+test("core text remains readable at desktop and compact widths", async () => {
+  const css = await readFile(
+    fileURLToPath(new URL("../app/globals.css", import.meta.url)),
+    "utf8",
+  );
+
+  assert.match(
+    css,
+    /\.compact-writing-date\s*\{[^}]*font-size:\s*clamp\(12px,\s*0\.695vw,\s*14\.4px\)/u,
+  );
+  assert.match(
+    css,
+    /\.compact-writing-summary\s*\{[^}]*font-size:\s*clamp\(14px,\s*0\.81vw,\s*16\.8px\)/u,
+  );
+  assert.match(
+    css,
+    /\.book-library-card-title\s*\{[^}]*font-size:\s*clamp\(15px,\s*0\.868vw,\s*18px\)/u,
+  );
+  assert.match(
+    css,
+    /\.book-library-card-author\s*\{[^}]*font-size:\s*clamp\(13px,\s*0\.752vw,\s*15\.6px\)/u,
+  );
+  assert.match(
+    css,
+    /\.playlist-browser-table\s*\{[^}]*font-size:\s*clamp\(15px,\s*0\.868vw,\s*18px\)/u,
+  );
+  assert.match(css, /\.space-count\s*\{[^}]*font-size:\s*13px/u);
+  assert.match(css, /\.filter-menu-label\s*\{[^}]*font-size:\s*13px/u);
+  assert.match(css, /\.filter-menu-trigger\s*\{[^}]*font-size:\s*14px/u);
+  assert.match(css, /\.filter-menu-option\s*\{[^}]*font-size:\s*14px/u);
+  assert.match(
+    css,
+    /\.markdown-body\s*\{[^}]*font-size:\s*clamp\(15px,\s*0\.868vw,\s*18px\)/u,
+  );
+  assert.match(
+    css,
+    /@media \(max-width: 760px\)[\s\S]*?\.compact-writing-date\s*\{[^}]*font-size:\s*12px;[\s\S]*?\.markdown-body\s*\{[^}]*font-size:\s*15px;[\s\S]*?\.playlist-browser-table\s*\{[^}]*font-size:\s*14px;[\s\S]*?\.filter-menu\s*\{[^}]*grid-template-columns:\s*54px minmax\(0,\s*1fr\);[\s\S]*?\.filter-menu-label\s*\{[^}]*font-size:\s*13px;/u,
+  );
+  assert.match(
+    css,
+    /@media \(max-width: 520px\)[\s\S]*?\.compact-writing-copy strong\s*\{[^}]*font-size:\s*15px;[\s\S]*?\.compact-writing-summary\s*\{[^}]*font-size:\s*13px;[\s\S]*?\.book-library-card-title\s*\{[^}]*font-size:\s*15px;[\s\S]*?\.book-library-card-author\s*\{[^}]*font-size:\s*13px;/u,
   );
 });
 
@@ -1596,7 +1656,7 @@ test("mobile navigation is an opaque sidebar and every space menu uses the liter
   );
   assert.match(
     css,
-    /@media \(max-width: 760px\)[\s\S]*?\.primary-nav\s*\{[\s\S]*?width:\s*min\(300px, 84vw\);[\s\S]*?height:\s*calc\(100dvh - 56px\);[\s\S]*?right:\s*0;[\s\S]*?left:\s*auto;[\s\S]*?transform:\s*translateX\(100%\)/u,
+    /@media \(max-width: 760px\)[\s\S]*?\.primary-nav\s*\{[\s\S]*?width:\s*min\(300px, 84vw\);[\s\S]*?height:\s*calc\(100dvh - var\(--site-header-height\)\);[\s\S]*?top:\s*var\(--site-header-height\);[\s\S]*?right:\s*0;[\s\S]*?left:\s*auto;[\s\S]*?transform:\s*translateX\(100%\)/u,
   );
   assert.match(
     css,
@@ -1604,7 +1664,7 @@ test("mobile navigation is an opaque sidebar and every space menu uses the liter
   );
   assert.match(
     css,
-    /@media \(max-width: 760px\)[\s\S]*?\.mobile-nav-backdrop\s*\{[\s\S]*?position:\s*fixed;[\s\S]*?inset:\s*56px 0 0;[\s\S]*?opacity:\s*0;[\s\S]*?visibility:\s*hidden/u,
+    /@media \(max-width: 760px\)[\s\S]*?\.mobile-nav-backdrop\s*\{[\s\S]*?position:\s*fixed;[\s\S]*?inset:\s*var\(--site-header-height\) 0 0;[\s\S]*?opacity:\s*0;[\s\S]*?visibility:\s*hidden/u,
   );
   assert.match(
     css,
