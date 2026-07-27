@@ -6,6 +6,10 @@ import sharp from "sharp";
 import { musics, posts } from "../app/content.generated.ts";
 import { extractMarkdownHeadings } from "../app/markdown-headings.ts";
 import { MUSIC_LYRICS } from "../app/music-lyrics.ts";
+import {
+  resolveDeploymentId,
+  STATIC_RSC_DIRECTORY,
+} from "../build/deployment-id.js";
 
 async function render(path = "/") {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
@@ -73,6 +77,8 @@ test("server-renders each collection", async () => {
 });
 
 test("the GitHub Pages client keeps static RSC navigation", async () => {
+  const deploymentId = resolveDeploymentId();
+  const versionedRscPrefix = `/${STATIC_RSC_DIRECTORY}/${deploymentId}`;
   const assetsDirectory = fileURLToPath(
     new URL("../dist/client/assets/", import.meta.url),
   );
@@ -87,7 +93,10 @@ test("the GitHub Pages client keeps static RSC navigation", async () => {
   ).join("\n");
 
   assert.match(clientScripts, /application\/octet-stream/u);
-  assert.match(clientScripts, /\/index/u);
+  assert.ok(
+    clientScripts.includes(versionedRscPrefix),
+    `client bundle does not use ${versionedRscPrefix}`,
+  );
 
   for (const payload of [
     "index.rsc",
@@ -100,6 +109,18 @@ test("the GitHub Pages client keeps static RSC navigation", async () => {
       new URL(`../dist/client/${payload}`, import.meta.url),
     );
     assert.ok(contents.byteLength > 0, payload);
+
+    const versionedContents = await readFile(
+      new URL(
+        `../dist/client/${STATIC_RSC_DIRECTORY}/${deploymentId}/${payload}`,
+        import.meta.url,
+      ),
+    );
+    assert.deepEqual(
+      versionedContents,
+      contents,
+      `${payload} differs from its deployment-specific copy`,
+    );
   }
 });
 

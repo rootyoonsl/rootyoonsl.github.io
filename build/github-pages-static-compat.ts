@@ -1,4 +1,8 @@
 import type { Plugin } from "vite";
+import {
+  resolveDeploymentId,
+  STATIC_RSC_DIRECTORY,
+} from "./deployment-id.js";
 
 const VINEXT_BROWSER_ENTRY =
   "/vinext/dist/server/app-browser-entry.js";
@@ -29,8 +33,18 @@ const RSC_CONTENT_TYPE_HELPER = `function isStaticRscResponse(response, response
 
 const RSC_PATH_RETURN =
   'return `${pathname.length > 1 && pathname.endsWith("/") ? pathname.slice(0, -1) : pathname}.rsc${query}`;';
-const STATIC_RSC_PATH_RETURN = `const normalizedPathname = pathname === "/" ? "/index" : pathname.length > 1 && pathname.endsWith("/") ? pathname.slice(0, -1) : pathname;
-\treturn \`\${normalizedPathname}.rsc\${query}\`;`;
+const HARD_NAV_RESPONSE_CHECK = "if (responseUrl) {";
+
+function staticRscPathReturn(deploymentId: string) {
+  return `const normalizedPathname = pathname === "/" ? "/index" : pathname.length > 1 && pathname.endsWith("/") ? pathname.slice(0, -1) : pathname;
+\treturn \`/${STATIC_RSC_DIRECTORY}/${deploymentId}\${normalizedPathname}.rsc\${query}\`;`;
+}
+
+function staticHardNavResponseCheck(deploymentId: string) {
+  const versionedPrefix = `/${STATIC_RSC_DIRECTORY}/${deploymentId}/`;
+
+  return `if (responseUrl && !new URL(responseUrl, window.location.origin).pathname.startsWith("${versionedPrefix}")) {`;
+}
 
 function normalizeModuleId(id: string) {
   return id.split("?", 1)[0].replaceAll("\\", "/");
@@ -56,11 +70,15 @@ function requireReplacement(
  * GitHub Pages serves generated `.rsc` files as application/octet-stream and
  * Vinext 0.0.50 otherwise falls back to a full document navigation. Pages also
  * exports the home payload as `/index.rsc`, while Vinext requests `/.rsc`.
+ * Stable RSC paths are cached for ten minutes even when their query changes,
+ * so every deployment receives a commit-specific pathname as well.
  *
  * Patch only the browser build: the local/server RSC pipeline keeps its native
  * content type and path handling.
  */
 export function githubPagesStaticCompatibility(): Plugin {
+  const deploymentId = resolveDeploymentId();
+
   return {
     name: "github-pages-static-compatibility",
     apply: "build",
@@ -90,6 +108,12 @@ export function githubPagesStaticCompatibility(): Plugin {
           STATIC_NAVIGATION_CONTENT_TYPE_CHECK,
           "navigation RSC content-type check",
         );
+        patched = requireReplacement(
+          patched,
+          HARD_NAV_RESPONSE_CHECK,
+          staticHardNavResponseCheck(deploymentId),
+          "versioned RSC hard-navigation fallback",
+        );
 
         return { code: patched, map: null };
       }
@@ -99,8 +123,8 @@ export function githubPagesStaticCompatibility(): Plugin {
           code: requireReplacement(
             source,
             RSC_PATH_RETURN,
-            STATIC_RSC_PATH_RETURN,
-            "home RSC request path",
+            staticRscPathReturn(deploymentId),
+            "versioned RSC request path",
           ),
           map: null,
         };

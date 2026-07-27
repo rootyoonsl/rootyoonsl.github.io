@@ -38,6 +38,8 @@ jobs:
 
       - name: Build and verify the blog
         run: npm test
+        env:
+          YOONSL_DEPLOYMENT_ID: ${{ github.sha }}
 
       - name: Configure GitHub Pages
         if: github.event_name != 'pull_request'
