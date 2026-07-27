@@ -17,6 +17,8 @@ import { SpaceHeader } from "@/app/components/SpaceHeader";
 const ALL_ARTISTS = "전체";
 const TRACKS_PER_PAGE = 10;
 const PAGE_GROUP_SIZE = 5;
+const PAGE_SWIPE_MIN_DISTANCE = 48;
+const PAGE_SWIPE_DIRECTION_RATIO = 1.25;
 
 function getPageItems(currentPage: number, totalPages: number) {
   const groupStart =
@@ -53,6 +55,12 @@ export function Playlist() {
     startY: 0,
     startScrollTop: 0,
   });
+  const pageSwipeRef = useRef({
+    pointerId: -1,
+    startX: 0,
+    startY: 0,
+  });
+  const suppressSwipeClickUntilRef = useRef(0);
   const spinAnimationRef = useRef<Animation | null>(null);
   const returnAnimationRef = useRef<Animation | null>(null);
   const trackButtonRefs = useRef(new Map<string, HTMLButtonElement>());
@@ -296,6 +304,79 @@ export function Playlist() {
     [totalPages],
   );
 
+  const startPageSwipe = useCallback(
+    (event: ReactPointerEvent<HTMLDivElement>) => {
+      if (
+        !event.isPrimary ||
+        (event.pointerType !== "touch" && event.pointerType !== "pen") ||
+        !window.matchMedia("(max-width: 760px)").matches
+      ) {
+        return;
+      }
+
+      suppressSwipeClickUntilRef.current = 0;
+      pageSwipeRef.current = {
+        pointerId: event.pointerId,
+        startX: event.clientX,
+        startY: event.clientY,
+      };
+    },
+    [],
+  );
+
+  const finishPageSwipe = useCallback(
+    (event: ReactPointerEvent<HTMLDivElement>) => {
+      const swipe = pageSwipeRef.current;
+      if (swipe.pointerId !== event.pointerId) return;
+
+      pageSwipeRef.current.pointerId = -1;
+
+      const deltaX = swipe.startX - event.clientX;
+      const deltaY = swipe.startY - event.clientY;
+      const horizontalDistance = Math.abs(deltaX);
+      const verticalDistance = Math.abs(deltaY);
+
+      if (
+        horizontalDistance < PAGE_SWIPE_MIN_DISTANCE ||
+        horizontalDistance <= verticalDistance * PAGE_SWIPE_DIRECTION_RATIO
+      ) {
+        return;
+      }
+
+      suppressSwipeClickUntilRef.current = window.performance.now() + 400;
+      const nextPage = currentPage + (deltaX > 0 ? 1 : -1);
+      if (nextPage >= 1 && nextPage <= totalPages) {
+        selectPage(nextPage);
+      }
+    },
+    [currentPage, selectPage, totalPages],
+  );
+
+  const cancelPageSwipe = useCallback(
+    (event: ReactPointerEvent<HTMLDivElement>) => {
+      if (pageSwipeRef.current.pointerId === event.pointerId) {
+        pageSwipeRef.current.pointerId = -1;
+      }
+    },
+    [],
+  );
+
+  const suppressClickAfterPageSwipe = useCallback(
+    (event: ReactMouseEvent<HTMLDivElement>) => {
+      if (
+        event.detail === 0 ||
+        window.performance.now() > suppressSwipeClickUntilRef.current
+      ) {
+        return;
+      }
+
+      suppressSwipeClickUntilRef.current = 0;
+      event.preventDefault();
+      event.stopPropagation();
+    },
+    [],
+  );
+
   const handleKeyDown = useCallback(
     (event: KeyboardEvent<HTMLDivElement>) => {
       if (event.altKey || event.ctrlKey || event.metaKey) return;
@@ -407,6 +488,11 @@ export function Playlist() {
           <div
             className="playlist-browser-table-scroll"
             ref={tableScrollRef}
+            style={{ touchAction: "pan-y pinch-zoom" }}
+            onPointerDown={startPageSwipe}
+            onPointerUp={finishPageSwipe}
+            onPointerCancel={cancelPageSwipe}
+            onClickCapture={suppressClickAfterPageSwipe}
           >
             <table className="playlist-browser-table">
               <caption className="playlist-browser-caption">

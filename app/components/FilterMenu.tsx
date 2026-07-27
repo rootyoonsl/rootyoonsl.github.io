@@ -97,11 +97,15 @@ export function FilterMenu({
     index: number,
   ) {
     let nextIndex: number | null = null;
+    const navigationColumns = window.matchMedia("(max-width: 430px)")
+      .matches
+      ? 1
+      : columns;
 
     if (event.key === "ArrowDown") {
-      nextIndex = index + columns;
+      nextIndex = index + navigationColumns;
     } else if (event.key === "ArrowUp") {
-      nextIndex = index - columns;
+      nextIndex = index - navigationColumns;
     } else if (event.key === "ArrowRight") {
       nextIndex = index + 1;
     } else if (event.key === "ArrowLeft") {

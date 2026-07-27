@@ -437,17 +437,45 @@ test("book and music filters share a polished scalable menu", async () => {
   assert.doesNotMatch(css, /\.filter-menu-option-mark/u);
   assert.match(
     css,
-    /\.filter-menu-option\s*\{[\s\S]*?grid-template-columns:\s*minmax\(0,\s*1fr\) auto;[\s\S]*?gap:\s*9px/u,
+    /\.filter-menu-option\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\) auto;[^}]*gap:\s*10px;[^}]*font-size:\s*13px/u,
   );
   assert.match(filterMenu, /event\.key === "ArrowDown"/u);
   assert.match(filterMenu, /event\.key === "Escape"/u);
   assert.match(
     css,
-    /\.filter-menu-popover\s*\{[\s\S]*?border-radius:\s*15px;[\s\S]*?backdrop-filter:\s*blur\(18px\) saturate\(1\.08\)/u,
+    /:root\s*\{[^}]*--filter-menu-background:\s*#ffffff;/u,
   );
   assert.match(
     css,
-    /\.filter-menu-options\s*\{[\s\S]*?max-height:\s*min\(320px,\s*52svh\)[\s\S]*?grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\)/u,
+    /html\.dark\s*\{[^}]*--filter-menu-background:\s*#1a1a1a;/u,
+  );
+  assert.match(
+    css,
+    /html\.sunset\s*\{[^}]*--filter-menu-background:\s*#fff9f6;/u,
+  );
+  assert.match(
+    css,
+    /html\.sunset\.dark\s*\{[^}]*--filter-menu-background:\s*#110d15;/u,
+  );
+  assert.match(
+    css,
+    /\.filter-menu-popover\s*\{[^}]*width:\s*min\(400px,\s*calc\(100vw - 32px\)\);[^}]*padding:\s*13px;[^}]*border-radius:\s*17px;[^}]*background:\s*var\(--filter-menu-background\);[^}]*backdrop-filter:\s*none;[^}]*-webkit-backdrop-filter:\s*none/u,
+  );
+  assert.match(
+    css,
+    /\.filter-menu-options\s*\{[^}]*max-height:\s*min\(380px,\s*56svh\);[^}]*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\)/u,
+  );
+  assert.match(
+    css,
+    /\.filter-menu-trigger\s*\{[^}]*height:\s*36px;[^}]*background:\s*var\(--filter-menu-background\);[^}]*font-size:\s*13px/u,
+  );
+  assert.match(
+    css,
+    /\.filter-menu-option\s*\{[^}]*min-height:\s*42px;/u,
+  );
+  assert.match(
+    css,
+    /@media \(max-width: 760px\)[\s\S]*?\.space-filter\s*\{[^}]*width:\s*min\(220px,\s*58vw\);[^}]*\}[\s\S]*?\.filter-menu-popover\s*\{[^}]*width:\s*min\(368px,\s*calc\(100vw - 24px\)\)/u,
   );
   assert.match(
     css,
@@ -618,7 +646,19 @@ test("articles use the restored serif stack on a quiet paper surface", async () 
     tocComponent,
     /target\.scrollIntoView\(\{[\s\S]*?prefers-reduced-motion:\s*reduce[\s\S]*?block:\s*"start"/u,
   );
-  assert.match(tocComponent, /if \(headings\.length === 0\) return null/u);
+  assert.match(
+    tocComponent,
+    /const COMPACT_TOC_QUERY = "\(max-width: 999px\)"/u,
+  );
+  assert.match(tocComponent, /useSyncExternalStore/u);
+  assert.match(
+    tocComponent,
+    /if \(isCompactLayout \|\| headings\.length === 0\) return/u,
+  );
+  assert.match(
+    tocComponent,
+    /if \(headings\.length === 0 \|\| isCompactLayout\) return null/u,
+  );
   assert.doesNotMatch(tocComponent, /Table of Contents/u);
   assert.doesNotMatch(tocComponent, />\s*본문\s*</u);
   assert.match(headingUtility, /activeFence/u);
@@ -674,7 +714,7 @@ test("articles use the restored serif stack on a quiet paper surface", async () 
   );
   assert.match(
     css,
-    /@media \(max-width: 999px\)[\s\S]*?\.article-toc\s*\{[\s\S]*?width:\s*100%;[\s\S]*?position:\s*relative/u,
+    /@media \(max-width: 999px\)\s*\{[\s\S]*?\.article-toc\s*\{[^}]*display:\s*none;[^}]*\}/u,
   );
 });
 
@@ -1134,6 +1174,18 @@ test("music selection ignores wheel input and the album art fills the CD", async
     /className="playlist-pagination"[\s\S]*?aria-label="플레이리스트 페이지"/u,
   );
   assert.match(
+    component,
+    /className="playlist-browser-table-scroll"[\s\S]*?style=\{\{ touchAction: "pan-y pinch-zoom" \}\}[\s\S]*?onPointerDown=\{startPageSwipe\}[\s\S]*?onPointerUp=\{finishPageSwipe\}[\s\S]*?onPointerCancel=\{cancelPageSwipe\}[\s\S]*?onClickCapture=\{suppressClickAfterPageSwipe\}/u,
+  );
+  assert.match(
+    component,
+    /const PAGE_SWIPE_MIN_DISTANCE = 48;[\s\S]*?horizontalDistance < PAGE_SWIPE_MIN_DISTANCE[\s\S]*?horizontalDistance <= verticalDistance \* PAGE_SWIPE_DIRECTION_RATIO[\s\S]*?const nextPage = currentPage \+ \(deltaX > 0 \? 1 : -1\);[\s\S]*?selectPage\(nextPage\)/u,
+  );
+  assert.match(
+    component,
+    /event\.pointerType !== "touch" && event\.pointerType !== "pen"[\s\S]*?window\.matchMedia\("\(max-width: 760px\)"\)\.matches[\s\S]*?suppressSwipeClickUntilRef\.current = window\.performance\.now\(\) \+ 400[\s\S]*?event\.preventDefault\(\);[\s\S]*?event\.stopPropagation\(\)/u,
+  );
+  assert.match(
     css,
     /\.playlist-cd-label\s*\{[\s\S]*?inset:\s*0;[\s\S]*?border-radius:\s*inherit;/u,
   );
@@ -1437,7 +1489,7 @@ test("all four spaces and the header share one content width", async () => {
   assert.match(css, /\.space-page\s*\{[\s\S]*?padding-top:\s*32px/u);
   assert.match(
     css,
-    /\.space-header\s*\{[\s\S]*?height:\s*45px[\s\S]*?padding-bottom:\s*12px[\s\S]*?border-bottom:\s*1px solid var\(--line-strong\)/u,
+    /\.space-header\s*\{[\s\S]*?height:\s*45px[\s\S]*?padding-bottom:\s*8px[\s\S]*?border-bottom:\s*1px solid var\(--line-strong\)/u,
   );
   assert.match(
     css,

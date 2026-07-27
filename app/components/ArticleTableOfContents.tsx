@@ -1,7 +1,24 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import type { MarkdownHeading } from "@/app/markdown-headings";
+
+const COMPACT_TOC_QUERY = "(max-width: 999px)";
+
+function subscribeToCompactLayout(onChange: () => void) {
+  const mediaQuery = window.matchMedia(COMPACT_TOC_QUERY);
+  mediaQuery.addEventListener("change", onChange);
+
+  return () => mediaQuery.removeEventListener("change", onChange);
+}
+
+function getCompactLayoutSnapshot() {
+  return window.matchMedia(COMPACT_TOC_QUERY).matches;
+}
+
+function getServerCompactLayoutSnapshot() {
+  return false;
+}
 
 export function ArticleTableOfContents({
   headings,
@@ -9,8 +26,15 @@ export function ArticleTableOfContents({
   headings: readonly MarkdownHeading[];
 }) {
   const [activeId, setActiveId] = useState(headings[0]?.id ?? "");
+  const isCompactLayout = useSyncExternalStore(
+    subscribeToCompactLayout,
+    getCompactLayoutSnapshot,
+    getServerCompactLayoutSnapshot,
+  );
 
   useEffect(() => {
+    if (isCompactLayout || headings.length === 0) return;
+
     const targetIds = headings.map((heading) => heading.id);
     let animationFrame = 0;
 
@@ -44,9 +68,9 @@ export function ArticleTableOfContents({
       window.removeEventListener("scroll", updateActiveHeading);
       window.removeEventListener("resize", updateActiveHeading);
     };
-  }, [headings]);
+  }, [headings, isCompactLayout]);
 
-  if (headings.length === 0) return null;
+  if (headings.length === 0 || isCompactLayout) return null;
 
   const navigateToHeading = (headingId: string) => {
     const target = document.getElementById(headingId);
