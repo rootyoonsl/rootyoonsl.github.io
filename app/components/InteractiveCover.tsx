@@ -174,13 +174,24 @@ function analyzeSourcePixels(image: HTMLImageElement): PixelAnalysis | null {
   return { source, rowTexture, width, height };
 }
 
-export function InteractiveCover() {
+export function InteractiveCover({ active = true }: { active?: boolean }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
 
-    if (!canvas) {
+    if (!canvas || !active) {
+      return;
+    }
+
+    const staticCoverQuery = window.matchMedia(
+      "(max-width: 760px), (hover: none) and (pointer: coarse)",
+    );
+
+    // Mobile browsers repeatedly resize fixed canvases while their address bar
+    // moves. Keep the same artwork as a CSS background there and skip all
+    // pixel analysis, animation frames, and pointer listeners.
+    if (staticCoverQuery.matches) {
       return;
     }
 
@@ -218,6 +229,14 @@ export function InteractiveCover() {
     }
 
     function resizeCanvas() {
+      if (staticCoverQuery.matches) {
+        if (animationFrame !== 0) {
+          window.cancelAnimationFrame(animationFrame);
+          animationFrame = 0;
+        }
+        return;
+      }
+
       const bounds = activeCanvas.getBoundingClientRect();
       const devicePixelRatio = Math.min(
         window.devicePixelRatio || 1,
@@ -275,7 +294,7 @@ export function InteractiveCover() {
     function drawFrame(time: number) {
       animationFrame = 0;
 
-      if (!imageReady || !analysis) {
+      if (staticCoverQuery.matches || !imageReady || !analysis) {
         return;
       }
 
@@ -411,6 +430,10 @@ export function InteractiveCover() {
     }
 
     function handlePointerMove(event: PointerEvent) {
+      if (staticCoverQuery.matches) {
+        return;
+      }
+
       const bounds = activeCanvas.getBoundingClientRect();
       const nextX = clamp((event.clientX - bounds.left) / bounds.width) * 2 - 1;
       const nextY = clamp((event.clientY - bounds.top) / bounds.height) * 2 - 1;
@@ -480,7 +503,7 @@ export function InteractiveCover() {
       reducedMotionQuery.removeEventListener("change", handleReducedMotion);
       image.onload = null;
     };
-  }, []);
+  }, [active]);
 
   return (
     <canvas

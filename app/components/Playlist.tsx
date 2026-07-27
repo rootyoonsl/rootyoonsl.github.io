@@ -382,21 +382,6 @@ export function Playlist() {
     });
   }, [selectedIndex, visibleTracks]);
 
-  useEffect(() => {
-    pageTracks.forEach((track) => {
-      if (
-        !track.thumbnail ||
-        prefetchedThumbnailRefs.current.has(track.thumbnail)
-      ) {
-        return;
-      }
-
-      prefetchedThumbnailRefs.current.add(track.thumbnail);
-      const image = new Image();
-      image.src = track.thumbnail;
-    });
-  }, [pageTracks]);
-
   return (
     <section
       className="playlist-browser space-page"

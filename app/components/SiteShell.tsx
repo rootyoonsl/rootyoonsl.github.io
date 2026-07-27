@@ -4,21 +4,21 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, Moon, Search, Sun, Sunset, X } from "lucide-react";
 import {
-  type KeyboardEvent as ReactKeyboardEvent,
   type ReactNode,
+  lazy,
+  Suspense,
   useEffect,
   useLayoutEffect,
-  useMemo,
   useRef,
   useState,
 } from "react";
-import { photos, posts } from "@/app/content.generated";
 import { InteractiveCover } from "@/app/components/InteractiveCover";
-import { CURATED_BOOKS, CURATED_TRACKS } from "@/app/library";
 import { GITHUB_URL } from "@/app/library-meta";
 
 type Theme = "sunset-light" | "sunset-dark" | "light" | "dark";
 type RouteMotion = "settled" | "from-home" | "to-home" | "between-spaces";
+
+const SearchDialog = lazy(() => import("@/app/components/SearchDialog"));
 
 function GitHubMark() {
   return (
@@ -40,198 +40,6 @@ const navigation = [
   { href: "/music", label: "음악 공간" },
   { href: "/photos", label: "사진 공간" },
 ] as const;
-
-type SearchItem = {
-  category: "글" | "책" | "음악" | "사진";
-  title: string;
-  detail: string;
-  href: string;
-  keywords: string;
-};
-
-function normalizeSearch(value: string) {
-  return value.toLocaleLowerCase("ko-KR").replace(/\s+/g, "");
-}
-
-function SearchDialog({
-  onClose,
-}: {
-  onClose: () => void;
-}) {
-  const [query, setQuery] = useState("");
-  const dialogRef = useRef<HTMLElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  const items = useMemo<SearchItem[]>(
-    () => [
-      ...posts.map((post) => ({
-        category: "글" as const,
-        title: post.title,
-        detail: post.displayDate,
-        href: `/writing/${encodeURIComponent(post.slug)}`,
-        keywords: `${post.title} ${post.plainText}`,
-      })),
-      ...CURATED_BOOKS.map((book) => ({
-        category: "책" as const,
-        title: book.title,
-        detail: book.author,
-        href: book.href,
-        keywords: `${book.title} ${book.author}`,
-      })),
-      ...CURATED_TRACKS.map((track) => ({
-        category: "음악" as const,
-        title: track.title,
-        detail: track.artist,
-        href: track.href,
-        keywords: `${track.title} ${track.artist}`,
-      })),
-      ...photos.map((photo) => ({
-        category: "사진" as const,
-        title: `${photo.displayDate} 사진`,
-        detail: photo.displayDate,
-        href: `/photos?photo=${encodeURIComponent(photo.id)}`,
-        keywords: `${photo.filename} ${photo.takenAt}`,
-      })),
-    ],
-    [],
-  );
-
-  const results = useMemo(() => {
-    const needle = normalizeSearch(query);
-    return (needle
-      ? items.filter((item) => normalizeSearch(item.keywords).includes(needle))
-      : items
-    ).slice(0, 9);
-  }, [items, query]);
-
-  useEffect(() => {
-    const previousFocus =
-      document.activeElement instanceof HTMLElement
-        ? document.activeElement
-        : null;
-    const frame = requestAnimationFrame(() => inputRef.current?.focus());
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      cancelAnimationFrame(frame);
-      document.body.style.overflow = previousOverflow;
-      if (previousFocus?.isConnected) {
-        previousFocus.focus();
-      }
-    };
-  }, []);
-
-  const trapFocus = (event: ReactKeyboardEvent<HTMLElement>) => {
-    if (event.key !== "Tab") {
-      return;
-    }
-
-    const focusableElements = dialogRef.current?.querySelectorAll<HTMLElement>(
-      'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])',
-    );
-
-    if (!focusableElements?.length) {
-      event.preventDefault();
-      return;
-    }
-
-    const firstElement = focusableElements[0];
-    const lastElement = focusableElements[focusableElements.length - 1];
-
-    if (event.shiftKey && document.activeElement === firstElement) {
-      event.preventDefault();
-      lastElement.focus();
-    } else if (!event.shiftKey && document.activeElement === lastElement) {
-      event.preventDefault();
-      firstElement.focus();
-    }
-  };
-
-  return (
-    <div
-      className="search-backdrop"
-      role="presentation"
-      onMouseDown={(event) => {
-        if (event.target === event.currentTarget) onClose();
-      }}
-    >
-      <section
-        ref={dialogRef}
-        className="search-dialog"
-        role="dialog"
-        aria-modal="true"
-        aria-label="사이트 검색"
-        onKeyDown={trapFocus}
-      >
-        <div className="search-input-row">
-          <Search size={17} aria-hidden="true" />
-          <input
-            ref={inputRef}
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            onKeyDown={(event) => {
-              if (event.key === "Escape") onClose();
-            }}
-            placeholder="검색"
-            aria-label="검색어"
-          />
-          <button
-            type="button"
-            className="icon-button"
-            onClick={onClose}
-            aria-label="검색 닫기"
-          >
-            <X size={17} />
-          </button>
-        </div>
-
-        <div className="search-results" aria-live="polite">
-          {results.length ? (
-            results.map((item) => {
-              const external = item.href.startsWith("http");
-              const content = (
-                <>
-                  <span className="search-category">{item.category}</span>
-                  <span className="search-result-copy">
-                    <strong>{item.title}</strong>
-                    <small>{item.detail}</small>
-                  </span>
-                </>
-              );
-              return external ? (
-                <a
-                  className="search-result"
-                  href={item.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  key={`${item.category}-${item.href}-${item.title}`}
-                  onClick={onClose}
-                >
-                  {content}
-                </a>
-              ) : (
-                <Link
-                  className="search-result"
-                  href={item.href}
-                  key={`${item.category}-${item.href}-${item.title}`}
-                  onClick={onClose}
-                >
-                  {content}
-                </Link>
-              );
-            })
-          ) : (
-            <p className="search-empty">검색 결과가 없습니다.</p>
-          )}
-        </div>
-        <div className="search-hint">
-          <span>제목과 본문을 검색합니다.</span>
-          <kbd>ESC</kbd>
-        </div>
-      </section>
-    </div>
-  );
-}
 
 export function SiteShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
@@ -317,6 +125,15 @@ export function SiteShell({ children }: { children: ReactNode }) {
     }
 
     previousPathnameRef.current = pathname;
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      const settleFrame = window.requestAnimationFrame(() => {
+        setRouteMotion("settled");
+        setHeaderVisible(pathname !== "/");
+      });
+      return () => window.cancelAnimationFrame(settleFrame);
+    }
+
     let settleTimer: number;
 
     if (previousPathname === "/" && pathname !== "/") {
@@ -421,7 +238,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
     >
       {!isHome && (
         <div className="sunset-theme-cover" aria-hidden="true">
-          <InteractiveCover />
+          <InteractiveCover active={sunsetEnabled} />
         </div>
       )}
       <a className="skip-link" href="#main-content">
@@ -566,7 +383,9 @@ export function SiteShell({ children }: { children: ReactNode }) {
         </a>
       )}
       {searchOpen && (
-        <SearchDialog onClose={() => setSearchOpen(false)} />
+        <Suspense fallback={null}>
+          <SearchDialog onClose={() => setSearchOpen(false)} />
+        </Suspense>
       )}
     </div>
   );

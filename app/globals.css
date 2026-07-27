@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 :root {
+  --viewport-background: #ffffff;
   --background: #ffffff;
   --surface: #f6f6f7;
   --surface-hover: #eeeeef;
@@ -32,6 +33,7 @@
 
 html.dark {
   color-scheme: dark;
+  --viewport-background: #1a1a1a;
   --background: #1a1a1a;
   --surface: #242424;
   --surface-hover: #303030;
@@ -56,6 +58,7 @@ html.dark {
 
 html.sunset {
   color-scheme: light;
+  --viewport-background: #c99182;
   --background: rgba(255, 250, 247, 0.86);
   --surface: rgba(255, 247, 243, 0.9);
   --surface-hover: rgba(247, 234, 228, 0.95);
@@ -80,6 +83,7 @@ html.sunset {
 
 html.sunset.dark {
   color-scheme: dark;
+  --viewport-background: #17111c;
   --background: rgba(18, 14, 22, 0.86);
   --surface: rgba(32, 24, 31, 0.9);
   --surface-hover: rgba(48, 36, 44, 0.95);
@@ -107,10 +111,11 @@ html.sunset.dark {
 }
 
 html {
-  background: var(--background);
+  background: var(--viewport-background);
   color-scheme: light;
   scroll-behavior: smooth;
   scrollbar-gutter: auto;
+  overscroll-behavior-y: none;
 }
 
 html:has(.site-root.is-home) {
@@ -145,6 +150,8 @@ html:has(.site-root.is-home) body {
 }
 
 body {
+  min-height: 100vh;
+  min-height: 100dvh;
   margin: 0;
   background: var(--background);
   color: var(--foreground);
@@ -208,6 +215,7 @@ img {
 
 .site-root {
   min-height: 100vh;
+  min-height: 100dvh;
 }
 
 .site-root:not(.is-home) {
@@ -392,7 +400,7 @@ html.sunset.dark .sunset-theme-cover::after {
 }
 
 .wordmark-mark {
-  width: 26px;
+  width: clamp(26px, 1.505vw, 31.2px);
   aspect-ratio: 1;
   flex: 0 0 auto;
   border-radius: 7px;
@@ -406,15 +414,15 @@ html.sunset.dark .sunset-theme-cover::after {
   display: flex;
   flex-direction: column;
   font-family: var(--logo-font);
-  font-size: 12px;
+  font-size: clamp(12px, 0.695vw, 14.4px);
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 0.92;
 }
 
 .primary-nav {
-  --nav-item-width: 64px;
-  --nav-item-gap: 10px;
+  --nav-item-width: clamp(64px, 3.7vw, 76.8px);
+  --nav-item-gap: clamp(10px, 0.58vw, 12px);
 
   height: 100%;
   position: relative;
@@ -431,7 +439,7 @@ html.sunset.dark .sunset-theme-cover::after {
   justify-content: center;
   color: var(--muted);
   font-family: var(--article-serif);
-  font-size: 13px;
+  font-size: clamp(13px, 0.752vw, 15.6px);
   font-weight: 600;
   letter-spacing: -0.012em;
   white-space: nowrap;
@@ -499,7 +507,10 @@ html.sunset.dark .sunset-theme-cover::after {
   height: 34px;
   position: fixed;
   top: 11px;
-  right: max(20px, calc((100% - 1120px) / 2));
+  right: max(
+    20px,
+    calc((100% - clamp(1120px, 64.8vw, 1344px)) / 2)
+  );
   z-index: 101;
   display: flex;
   align-items: center;
@@ -715,6 +726,7 @@ html.theme-transitioning:not(.sunset) .sunset-theme-cover {
   inset: 0;
   z-index: 0;
   display: block;
+  background: #211829 url("/images/background.png") center / cover no-repeat;
   pointer-events: none;
   image-rendering: pixelated;
   filter: brightness(1);
@@ -837,10 +849,13 @@ html.sunset:not(.dark) .compact-writing-list {
 .compact-writing-row {
   position: relative;
   display: grid;
-  grid-template-columns: 54px minmax(0, 1fr) 132px;
+  grid-template-columns:
+    clamp(54px, 3.125vw, 64.8px)
+    minmax(0, 1fr)
+    clamp(132px, 7.64vw, 158.4px);
   align-items: center;
-  gap: 18px;
-  min-height: 112px;
+  gap: clamp(18px, 1.042vw, 21.6px);
+  min-height: clamp(112px, 6.48vw, 134.4px);
   padding: 14px 16px;
   border: 0;
   border-bottom: 1px solid
@@ -897,7 +912,7 @@ html.sunset:not(.dark) .compact-writing-list {
   justify-self: center;
   color: var(--muted);
   font-family: var(--article-serif);
-  font-size: 14px;
+  font-size: clamp(14px, 0.81vw, 16.8px);
   font-weight: 600;
   font-variant-numeric: normal;
   transform-origin: center;
@@ -914,7 +929,7 @@ html.sunset:not(.dark) .compact-writing-list {
 
 .compact-writing-date {
   color: var(--muted);
-  font-size: 11px;
+  font-size: clamp(11px, 0.637vw, 13.2px);
   font-variant-numeric: tabular-nums;
 }
 
@@ -935,7 +950,7 @@ html.sunset:not(.dark) .compact-writing-list {
 }
 
 .compact-writing-copy strong {
-  font-size: 16px;
+  font-size: clamp(16px, 0.926vw, 19.2px);
   font-weight: 650;
   letter-spacing: -0.015em;
   line-height: 1.4;
@@ -946,7 +961,7 @@ html.sunset:not(.dark) .compact-writing-list {
   overflow: hidden;
   color: var(--muted);
   display: -webkit-box;
-  font-size: 13px;
+  font-size: clamp(13px, 0.752vw, 15.6px);
   line-height: 1.55;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
@@ -1089,7 +1104,10 @@ html.sunset:not(.dark) .compact-writing-list {
 
 /* Article */
 .simple-article {
-  width: min(650px, calc(100% - 40px));
+  width: min(
+    clamp(650px, 37.6vw, 780px),
+    calc(100% - 40px)
+  );
   padding: 30px 0 80px;
 }
 
@@ -1133,7 +1151,7 @@ html.sunset:not(.dark) .compact-writing-list {
   width: clamp(140px, calc(50vw - 365px), 190px);
   position: fixed;
   top: 86px;
-  left: calc(50% + 351px);
+  left: calc(50% + clamp(351px, 20.3vw, 416px));
   z-index: 20;
   padding-left: 13px;
   border-left: 1px solid var(--line);
@@ -1209,7 +1227,10 @@ html.sunset:not(.dark)
 
 .markdown-body {
   min-width: 0;
-  padding: 26px 28px 32px;
+  padding:
+    clamp(26px, 1.5vw, 31px)
+    clamp(28px, 1.62vw, 34px)
+    clamp(32px, 1.85vw, 38px);
   border: 0;
   border-radius: 6px;
   background-color: var(--article-paper);
@@ -1226,7 +1247,7 @@ html.sunset:not(.dark)
     );
   color: var(--article-foreground);
   font-family: var(--article-serif);
-  font-size: 14px;
+  font-size: clamp(14px, 0.81vw, 16.8px);
   letter-spacing: -0.01em;
   line-height: 1.68;
   box-shadow: var(--article-paper-shadow);
@@ -1627,7 +1648,7 @@ a.article-nav-tab:focus-visible {
   overflow: hidden;
   display: block;
   color: var(--foreground);
-  font-size: 14px;
+  font-size: clamp(14px, 0.81vw, 16.8px);
   font-weight: 650;
   letter-spacing: -0.025em;
   line-height: 1.35;
@@ -1639,7 +1660,7 @@ a.article-nav-tab:focus-visible {
   min-width: 0;
   overflow: hidden;
   color: var(--muted);
-  font-size: 12px;
+  font-size: clamp(12px, 0.695vw, 14.4px);
   line-height: 1.3;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1930,7 +1951,7 @@ html.sunset:not(.dark) .playlist-browser-table-wrap {
   width: 100%;
   border-collapse: collapse;
   table-layout: fixed;
-  font-size: 14px;
+  font-size: clamp(14px, 0.81vw, 16.8px);
 }
 
 .playlist-browser-caption {
@@ -2291,7 +2312,7 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
 
 .space-heading h1 {
   margin: 0;
-  font-size: 22px;
+  font-size: clamp(22px, 1.273vw, 26.4px);
   font-weight: 650;
   letter-spacing: -0.035em;
   line-height: 1.35;
@@ -2790,7 +2811,10 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
 .book-library-root,
 .playlist-browser,
 .photo-gallery-root {
-  width: min(1120px, calc(100% - 40px));
+  width: min(
+    clamp(1120px, 64.8vw, 1344px),
+    calc(100% - 40px)
+  );
 }
 
 /* 404 */
@@ -2829,6 +2853,35 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
   gap: 6px;
   color: var(--accent-strong);
   font-size: 12px;
+}
+
+@media (min-width: 1729px) {
+  .home-logo {
+    font-size: clamp(48px, 2.78vw, 57.6px);
+  }
+
+  .home-navigation {
+    gap: clamp(8px, 0.463vw, 9.6px);
+  }
+
+  .home-navigation a {
+    min-width: clamp(88px, 5.095vw, 105.6px);
+    height: clamp(36px, 2.084vw, 43.2px);
+    font-size: clamp(14px, 0.81vw, 16.8px);
+  }
+
+  .simple-article-header h1 {
+    font-size: clamp(31px, 1.794vw, 37.2px);
+  }
+
+  .back-link,
+  .simple-article-header p {
+    font-size: clamp(12px, 0.695vw, 14.4px);
+  }
+
+  .article-toc {
+    font-size: clamp(11px, 0.637vw, 13.2px);
+  }
 }
 
 @media (max-width: 999px) {
@@ -2896,6 +2949,26 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
 }
 
 @media (max-width: 760px) {
+  .site-header {
+    background: var(--mobile-nav-background);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .route-main-space.route-from-home {
+    animation: route-space-mobile-in 380ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  @keyframes route-space-mobile-in {
+    from {
+      opacity: 0.58;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
   .section-shell {
     width: min(100% - 28px, 620px);
   }
@@ -2906,6 +2979,43 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
   .playlist-browser,
   .photo-gallery-root {
     width: calc(100% - 24px);
+  }
+
+  html.sunset:not(.dark) .compact-writing-list,
+  html.sunset:not(.dark) .playlist-browser-table-wrap {
+    background: rgba(255, 250, 247, 0.94);
+  }
+
+  .compact-writing-list,
+  .compact-writing-thumbnail-placeholder,
+  .book-library-card-copy,
+  .playlist-browser-table-wrap,
+  .writing-pagination,
+  .playlist-pagination,
+  .filter-menu-popover,
+  .photo-lightbox-close {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .photo-lightbox-photo-button,
+  .photo-lightbox[data-state="closing"] .photo-lightbox-photo-button {
+    border-radius: 12px;
+    clip-path: none;
+    filter: none;
+    transform: translateY(14px) scale(0.96);
+    transition:
+      opacity 260ms ease,
+      transform 380ms cubic-bezier(0.22, 1, 0.36, 1),
+      border-radius 380ms cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform, opacity;
+  }
+
+  .photo-lightbox[data-state="open"] .photo-lightbox-photo-button {
+    border-radius: 0;
+    clip-path: none;
+    filter: none;
+    transform: translateY(0) scale(1);
   }
 
   .header-inner {

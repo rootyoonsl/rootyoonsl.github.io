@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 import sharp from "sharp";
@@ -70,6 +70,74 @@ test("server-renders each collection", async () => {
     const response = await render(path);
     assert.equal(response.status, 200, path);
   }
+});
+
+test("the GitHub Pages client keeps static RSC navigation", async () => {
+  const assetsDirectory = fileURLToPath(
+    new URL("../dist/client/assets/", import.meta.url),
+  );
+  const clientScripts = (
+    await Promise.all(
+      (await readdir(assetsDirectory))
+        .filter((filename) => filename.endsWith(".js"))
+        .map((filename) =>
+          readFile(new URL(`../dist/client/assets/${filename}`, import.meta.url), "utf8"),
+        ),
+    )
+  ).join("\n");
+
+  assert.match(clientScripts, /application\/octet-stream/u);
+  assert.match(clientScripts, /\/index/u);
+
+  for (const payload of [
+    "index.rsc",
+    "writing.rsc",
+    "books.rsc",
+    "music.rsc",
+    "photos.rsc",
+  ]) {
+    const contents = await readFile(
+      new URL(`../dist/client/${payload}`, import.meta.url),
+    );
+    assert.ok(contents.byteLength > 0, payload);
+  }
+});
+
+test("the GitHub Pages artifact contains every generated bundle asset", async () => {
+  const clientRoot = new URL("../dist/client/", import.meta.url);
+  const manifest = JSON.parse(
+    await readFile(new URL(".vite/manifest.json", clientRoot), "utf8"),
+  );
+  const generatedAssets = new Set([
+    "favicon.png",
+    "images/background.png",
+  ]);
+
+  for (const [entryName, entry] of Object.entries(manifest)) {
+    assert.equal(typeof entry.file, "string", `${entryName} has no output file`);
+    generatedAssets.add(entry.file);
+
+    for (const asset of [...(entry.css ?? []), ...(entry.assets ?? [])]) {
+      generatedAssets.add(asset);
+    }
+
+    for (const importedEntry of [
+      ...(entry.imports ?? []),
+      ...(entry.dynamicImports ?? []),
+    ]) {
+      assert.ok(
+        Object.hasOwn(manifest, importedEntry),
+        `${entryName} references missing manifest entry ${importedEntry}`,
+      );
+    }
+  }
+
+  await Promise.all(
+    [...generatedAssets].map(async (asset) => {
+      const contents = await readFile(new URL(asset, clientRoot));
+      assert.ok(contents.byteLength > 0, `${asset} is empty`);
+    }),
+  );
 });
 
 test("music source supports plain artist headings and the complete update", () => {
@@ -467,7 +535,7 @@ test("articles use the restored serif stack on a quiet paper surface", async () 
 
   assert.match(
     css,
-    /\.simple-article\s*\{[\s\S]*?width:\s*min\(650px,\s*calc\(100% - 40px\)\)/u,
+    /\.simple-article\s*\{[\s\S]*?width:\s*min\([\s\S]*?clamp\(650px,\s*37\.6vw,\s*780px\),[\s\S]*?calc\(100% - 40px\)/u,
   );
   assert.match(
     css,
@@ -485,7 +553,7 @@ test("articles use the restored serif stack on a quiet paper surface", async () 
   assert.doesNotMatch(css, /Yoonsl Maru Buri/u);
   assert.match(
     css,
-    /\.markdown-body\s*\{[\s\S]*?padding:\s*26px 28px 32px;[\s\S]*?border:\s*0;[\s\S]*?background-color:\s*var\(--article-paper\);[\s\S]*?radial-gradient\([\s\S]*?font-family:\s*var\(--article-serif\);[\s\S]*?font-size:\s*14px;[\s\S]*?letter-spacing:\s*-0\.01em/u,
+    /\.markdown-body\s*\{[\s\S]*?padding:[\s\S]*?clamp\(26px,\s*1\.5vw,\s*31px\)[\s\S]*?clamp\(28px,\s*1\.62vw,\s*34px\)[\s\S]*?clamp\(32px,\s*1\.85vw,\s*38px\);[\s\S]*?border:\s*0;[\s\S]*?background-color:\s*var\(--article-paper\);[\s\S]*?radial-gradient\([\s\S]*?font-family:\s*var\(--article-serif\);[\s\S]*?font-size:\s*clamp\(14px,\s*0\.81vw,\s*16\.8px\);[\s\S]*?letter-spacing:\s*-0\.01em/u,
   );
   assert.match(
     css,
@@ -565,7 +633,7 @@ test("articles use the restored serif stack on a quiet paper surface", async () 
   assert.match(css, /\.markdown-table\s*\{[\s\S]*?font-size:\s*0\.95em/u);
   assert.match(
     css,
-    /\.article-toc\s*\{[\s\S]*?position:\s*fixed;[\s\S]*?top:\s*86px;[\s\S]*?left:\s*calc\(50% \+ 351px\)/u,
+    /\.article-toc\s*\{[\s\S]*?position:\s*fixed;[\s\S]*?top:\s*86px;[\s\S]*?left:\s*calc\(50% \+ clamp\(351px,\s*20\.3vw,\s*416px\)\)/u,
   );
   assert.match(
     css,
@@ -732,6 +800,10 @@ test("space menu links transition immediately with directional motion", async ()
     css,
     /@media \(prefers-reduced-motion:\s*reduce\)[\s\S]*?\.site-header\.route-from-home,[\s\S]*?animation:\s*none !important/u,
   );
+  assert.match(
+    shell,
+    /prefers-reduced-motion:\s*reduce[\s\S]*?setRouteMotion\("settled"\)[\s\S]*?setHeaderVisible\(pathname !== "\/"\)/u,
+  );
 });
 
 test("appearance uses separate sunset and light-dark controls", async () => {
@@ -860,6 +932,19 @@ test("appearance uses separate sunset and light-dark controls", async () => {
     css,
     /html\.sunset:not\(\.dark\) \.playlist-browser-table-wrap\s*\{[\s\S]*?background:\s*rgba\(255,\s*250,\s*247,\s*0\.74\)/u,
   );
+  assert.match(
+    css,
+    /\.home-interactive-cover\s*\{[\s\S]*?background:\s*#211829 url\("\/images\/background\.png"\) center \/ cover no-repeat/u,
+  );
+  assert.match(
+    cover,
+    /const staticCoverQuery = window\.matchMedia\([\s\S]*?max-width:\s*760px[\s\S]*?pointer:\s*coarse/u,
+  );
+  assert.match(
+    cover,
+    /if \(staticCoverQuery\.matches\) \{\s*return;\s*\}/u,
+  );
+  assert.match(shell, /<InteractiveCover active=\{sunsetEnabled\}/u);
   assert.match(cover, /window\.addEventListener\("pointermove"/u);
   assert.match(cover, /const cloudStart/u);
   assert.match(cover, /const waterStart/u);
@@ -904,6 +989,10 @@ test("gallery lightbox keeps viewport sizing and a smooth closing phase", async 
     /\.photo-gallery-card:hover,[\s\S]*?\.photo-gallery-card:focus-visible\s*\{[\s\S]*?transform:\s*scale\(1\.018\)/u,
   );
   assert.match(component, /className="photo-lightbox-close"/u);
+  assert.match(
+    component,
+    /const MOBILE_PHOTO_TRANSITION_MS = 420;[\s\S]*?max-width: 760px[\s\S]*?MOBILE_PHOTO_TRANSITION_MS/u,
+  );
   assert.doesNotMatch(
     component,
     /document\.body\.style\.overflow/u,
@@ -1322,7 +1411,7 @@ test("all four spaces and the header share one content width", async () => {
 
   assert.match(
     css,
-    /\.header-inner,[\s\S]*?\.writing-page\.section-shell,[\s\S]*?\.book-library-root,[\s\S]*?\.playlist-browser,[\s\S]*?\.photo-gallery-root\s*\{[\s\S]*?width:\s*min\(1120px,\s*calc\(100% - 40px\)\)/u,
+    /\.header-inner,[\s\S]*?\.writing-page\.section-shell,[\s\S]*?\.book-library-root,[\s\S]*?\.playlist-browser,[\s\S]*?\.photo-gallery-root\s*\{[\s\S]*?width:\s*min\([\s\S]*?clamp\(1120px,\s*64\.8vw,\s*1344px\),[\s\S]*?calc\(100% - 40px\)/u,
   );
   assert.match(css, /\.space-page\s*\{[\s\S]*?padding-top:\s*32px/u);
   assert.match(
@@ -1335,7 +1424,7 @@ test("all four spaces and the header share one content width", async () => {
   );
   assert.match(
     css,
-    /\.header-actions\s*\{[\s\S]*?width:\s*148px;[\s\S]*?position:\s*fixed;[\s\S]*?top:\s*11px;[\s\S]*?right:\s*max\(20px,\s*calc\(\(100% - 1120px\) \/ 2\)\)/u,
+    /\.header-actions\s*\{[\s\S]*?width:\s*148px;[\s\S]*?position:\s*fixed;[\s\S]*?top:\s*11px;[\s\S]*?right:\s*max\([\s\S]*?20px,[\s\S]*?calc\(\(100% - clamp\(1120px,\s*64\.8vw,\s*1344px\)\) \/ 2\)[\s\S]*?\)/u,
   );
   assert.match(
     css,
@@ -1374,7 +1463,7 @@ test("the header wordmark includes the rounded sunset mark", async () => {
   assert.match(html, /class="wordmark-mark"/u);
   assert.match(
     css,
-    /\.wordmark-mark\s*\{[\s\S]*?width:\s*26px;[\s\S]*?border-radius:\s*7px;[\s\S]*?url\("\/images\/background\.png"\)/u,
+    /\.wordmark-mark\s*\{[\s\S]*?width:\s*clamp\(26px,\s*1\.505vw,\s*31\.2px\);[\s\S]*?border-radius:\s*7px;[\s\S]*?url\("\/images\/background\.png"\)/u,
   );
 });
 
@@ -1464,40 +1553,51 @@ test("mobile navigation is an opaque sidebar and every space menu uses the liter
 });
 
 test("quiet interaction polish keeps navigation and media responsive", async () => {
-  const [css, shell, books, playlist, gallery] = await Promise.all([
-    readFile(
-      fileURLToPath(new URL("../app/globals.css", import.meta.url)),
-      "utf8",
-    ),
-    readFile(
-      fileURLToPath(
-        new URL("../app/components/SiteShell.tsx", import.meta.url),
+  const [css, shell, searchDialog, books, playlist, gallery] =
+    await Promise.all([
+      readFile(
+        fileURLToPath(new URL("../app/globals.css", import.meta.url)),
+        "utf8",
       ),
-      "utf8",
-    ),
-    readFile(
-      fileURLToPath(
-        new URL("../app/components/BookShelf.tsx", import.meta.url),
+      readFile(
+        fileURLToPath(
+          new URL("../app/components/SiteShell.tsx", import.meta.url),
+        ),
+        "utf8",
       ),
-      "utf8",
-    ),
-    readFile(
-      fileURLToPath(
-        new URL("../app/components/Playlist.tsx", import.meta.url),
+      readFile(
+        fileURLToPath(
+          new URL("../app/components/SearchDialog.tsx", import.meta.url),
+        ),
+        "utf8",
       ),
-      "utf8",
-    ),
-    readFile(
-      fileURLToPath(
-        new URL("../app/components/PhotoGallery.tsx", import.meta.url),
+      readFile(
+        fileURLToPath(
+          new URL("../app/components/BookShelf.tsx", import.meta.url),
+        ),
+        "utf8",
       ),
-      "utf8",
-    ),
-  ]);
+      readFile(
+        fileURLToPath(
+          new URL("../app/components/Playlist.tsx", import.meta.url),
+        ),
+        "utf8",
+      ),
+      readFile(
+        fileURLToPath(
+          new URL("../app/components/PhotoGallery.tsx", import.meta.url),
+        ),
+        "utf8",
+      ),
+    ]);
 
   assert.match(shell, /aria-current=\{/u);
-  assert.match(shell, /onKeyDown=\{trapFocus\}/u);
-  assert.match(shell, /previousFocus\.focus\(\)/u);
+  assert.match(
+    shell,
+    /lazy\(\(\) => import\("@\/app\/components\/SearchDialog"\)\)/u,
+  );
+  assert.match(searchDialog, /onKeyDown=\{trapFocus\}/u);
+  assert.match(searchDialog, /previousFocus\.focus\(\)/u);
   assert.match(books, /title=\{book\.title\}/u);
   assert.match(
     css,

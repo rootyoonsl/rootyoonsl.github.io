@@ -37,6 +37,7 @@ function getPhotoLayoutStyle(photo: GeneratedPhoto): PhotoLayoutStyle {
 }
 
 const PHOTO_TRANSITION_MS = 680;
+const MOBILE_PHOTO_TRANSITION_MS = 420;
 
 export function PhotoGallery({ photos }: PhotoGalleryProps) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
@@ -66,9 +67,15 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
     if (closeTimerRef.current) return;
 
     setLightboxPhase("closing");
-    const delay = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    const mobileLayout = window.matchMedia("(max-width: 760px)").matches;
+    const delay = reducedMotion
       ? 0
-      : PHOTO_TRANSITION_MS;
+      : mobileLayout
+        ? MOBILE_PHOTO_TRANSITION_MS
+        : PHOTO_TRANSITION_MS;
 
     closeTimerRef.current = setTimeout(() => {
       setActiveIndex(null);
