@@ -229,9 +229,19 @@ export const musics: CuratedMusicLink[] = [
     "url": "https://youtu.be/ZdBTBZfqI5w?si=PLm8CEuibcDnXQD5"
   },
   {
+    "title": "Boy - X",
+    "artist": "Nell",
+    "url": "https://youtu.be/Tk7n3TKw0yc?si=rh8755UH72cl81RP"
+  },
+  {
     "title": "Still Sunset",
     "artist": "Nell",
     "url": "https://youtu.be/En2seea1l2k?si=M8sYOE0ZB4OUVbff"
+  },
+  {
+    "title": "피터팬은 죽었다",
+    "artist": "Nell",
+    "url": "https://youtu.be/1LTCz-hv0wI?si=CnO-LKsIIj5twHS5"
   },
   {
     "title": "새벽이 빌려 준 마음",
@@ -264,6 +274,16 @@ export const musics: CuratedMusicLink[] = [
     "url": "https://youtu.be/LWkek-p_P54?si=0ISVYhGXLLHZ585v"
   },
   {
+    "title": "한 모금의 노래",
+    "artist": "이승윤",
+    "url": "https://youtu.be/Bp6aWqK2dvM?si=VNqU2GqnTscrw-uy"
+  },
+  {
+    "title": "꿈의 거처",
+    "artist": "이승윤",
+    "url": "https://youtu.be/yDg3Lth8uQ8?si=0S51NuVTUBZ5F7tX"
+  },
+  {
     "title": "라이프리뷰",
     "artist": "윤하",
     "url": "https://youtu.be/h66BlMPrrxM?si=PZZEO7bwqVyHxUOH"
@@ -279,6 +299,11 @@ export const musics: CuratedMusicLink[] = [
     "url": "https://youtu.be/zT9RxtAyT2s?si=885EMJPTXvqujLLQ"
   },
   {
+    "title": "살별",
+    "artist": "윤하",
+    "url": "https://youtu.be/43oVeAjyds4?si=e9-6DLXSnz120juv"
+  },
+  {
     "title": "사건의 지평선",
     "artist": "윤하",
     "url": "https://youtu.be/BBdC1rl5sKY?si=inQlQ-7fU3PcDSwM"
@@ -292,6 +317,11 @@ export const musics: CuratedMusicLink[] = [
     "title": "Skybound",
     "artist": "윤하",
     "url": "https://youtu.be/HCxSqDhQi0k?si=ozXn3UX8yHOuZf_Z"
+  },
+  {
+    "title": "스무살 어느 날",
+    "artist": "윤하",
+    "url": "https://youtu.be/-Vskj7divWk?si=C01cDMaOLHRyt1B4"
   },
   {
     "title": "나에게",
@@ -327,6 +357,31 @@ export const musics: CuratedMusicLink[] = [
     "title": "영원토록 빛나는 끝",
     "artist": "위수",
     "url": "https://youtu.be/KkbzSzAUBKU?si=wPSDogGsQI9CFLvc"
+  },
+  {
+    "title": "Freshman",
+    "artist": "페퍼톤스",
+    "url": "https://youtu.be/oMXHzSgtlpU?si=vpkarazLMO77A5Lj"
+  },
+  {
+    "title": "c a m e r a",
+    "artist": "페퍼톤스",
+    "url": "https://youtu.be/uaqOAMKYjVQ?si=fDsEIq4Dr5IaZ3Vh"
+  },
+  {
+    "title": "스커트가 불어온다",
+    "artist": "페퍼톤스",
+    "url": "https://youtu.be/7MevjgWpNms?si=J-2oKo9UeAICaLRr"
+  },
+  {
+    "title": "청춘",
+    "artist": "페퍼톤스",
+    "url": "https://youtu.be/sQGYqRHSflk?si=JUAN1rfK3683fCNP"
+  },
+  {
+    "title": "Drama",
+    "artist": "페퍼톤스",
+    "url": "https://youtu.be/ieOkpEzwXlc?si=iOTwjOoVK0u6rKrf"
   },
   {
     "title": "All the Time",
@@ -571,6 +626,17 @@ export const photos: GeneratedPhoto[] = [
     "alt": "2026. 04. 04에 촬영한 사진"
   },
   {
+    "id": "dscf8610",
+    "filename": "DSCF8610.jpg",
+    "src": "/gallery/dscf8610.webp",
+    "thumbnail": "/gallery/dscf8610-thumb.webp",
+    "width": 1136,
+    "height": 1705,
+    "takenAt": "2026-04-04T13:00:33",
+    "displayDate": "2026. 04. 04",
+    "alt": "2026. 04. 04에 촬영한 사진"
+  },
+  {
     "id": "dscf7976",
     "filename": "DSCF7976.jpg",
     "src": "/gallery/dscf7976.webp",
@@ -615,6 +681,17 @@ export const photos: GeneratedPhoto[] = [
     "alt": "2026. 01. 08에 촬영한 사진"
   },
   {
+    "id": "img-6121",
+    "filename": "IMG_6121.JPG",
+    "src": "/gallery/img-6121.webp",
+    "thumbnail": "/gallery/img-6121-thumb.webp",
+    "width": 1800,
+    "height": 2400,
+    "takenAt": "2026-01-07T13:00:58",
+    "displayDate": "2026. 01. 07",
+    "alt": "2026. 01. 07에 촬영한 사진"
+  },
+  {
     "id": "dscf7146",
     "filename": "DSCF7146.jpg",
     "src": "/gallery/dscf7146.webp",
@@ -624,6 +701,28 @@ export const photos: GeneratedPhoto[] = [
     "takenAt": "2025-12-08T12:56:21",
     "displayDate": "2025. 12. 08",
     "alt": "2025. 12. 08에 촬영한 사진"
+  },
+  {
+    "id": "dscf7131",
+    "filename": "DSCF7131.jpg",
+    "src": "/gallery/dscf7131.webp",
+    "thumbnail": "/gallery/dscf7131-thumb.webp",
+    "width": 1600,
+    "height": 2400,
+    "takenAt": "2025-12-08T12:40:05",
+    "displayDate": "2025. 12. 08",
+    "alt": "2025. 12. 08에 촬영한 사진"
+  },
+  {
+    "id": "dscf7065",
+    "filename": "DSCF7065.jpg",
+    "src": "/gallery/dscf7065.webp",
+    "thumbnail": "/gallery/dscf7065-thumb.webp",
+    "width": 2400,
+    "height": 1600,
+    "takenAt": "2025-12-02T10:49:12",
+    "displayDate": "2025. 12. 02",
+    "alt": "2025. 12. 02에 촬영한 사진"
   },
   {
     "id": "dscf7063",
@@ -723,6 +822,17 @@ export const photos: GeneratedPhoto[] = [
     "takenAt": "2025-11-17T12:38:03",
     "displayDate": "2025. 11. 17",
     "alt": "2025. 11. 17에 촬영한 사진"
+  },
+  {
+    "id": "dscf5584",
+    "filename": "DSCF5584.jpg",
+    "src": "/gallery/dscf5584.webp",
+    "thumbnail": "/gallery/dscf5584-thumb.webp",
+    "width": 2400,
+    "height": 1600,
+    "takenAt": "2025-11-09T14:24:40",
+    "displayDate": "2025. 11. 09",
+    "alt": "2025. 11. 09에 촬영한 사진"
   },
   {
     "id": "dscf5545",
@@ -844,6 +954,17 @@ export const photos: GeneratedPhoto[] = [
     "takenAt": "2025-01-29T12:19:03",
     "displayDate": "2025. 01. 29",
     "alt": "2025. 01. 29에 촬영한 사진"
+  },
+  {
+    "id": "img-2863",
+    "filename": "IMG_2863.JPG",
+    "src": "/gallery/img-2863.webp",
+    "thumbnail": "/gallery/img-2863-thumb.webp",
+    "width": 1800,
+    "height": 2400,
+    "takenAt": "2024-10-12T18:23:47",
+    "displayDate": "2024. 10. 12",
+    "alt": "2024. 10. 12에 촬영한 사진"
   },
   {
     "id": "img-2816",

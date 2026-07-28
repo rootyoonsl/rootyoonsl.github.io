@@ -162,11 +162,11 @@ test("the GitHub Pages artifact contains every generated bundle asset", async ()
 });
 
 test("music source supports plain artist headings and the complete update", () => {
-  assert.equal(musics.length, 69);
+  assert.equal(musics.length, 80);
   assert.equal(Object.keys(MUSIC_LYRICS).length, musics.length);
   assert.equal(
     Object.values(MUSIC_LYRICS).filter((lyrics) => lyrics !== "-").length,
-    68,
+    79,
   );
   assert.match(MUSIC_LYRICS.dQXcbK92ENE, /Lately 날으는 성을 본 적이 있니/u);
   assert.match(MUSIC_LYRICS.lMtnkxdY2kY, /This cold, steel spine/u);
