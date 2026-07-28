@@ -1285,10 +1285,10 @@ html.sunset:not(.dark)
 }
 
 .markdown-heading {
-  margin: 2.25em 0 0.8em;
+  margin: 2.65em 0 1.05em;
   font-weight: 700;
   letter-spacing: 0;
-  line-height: 1.45;
+  line-height: 1.55;
   scroll-margin-top: calc(var(--site-header-height) + 20px);
 }
 
@@ -3180,6 +3180,12 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
     padding: 22px 18px 26px;
     font-size: 15px;
     line-height: 1.68;
+  }
+
+  .markdown-heading {
+    margin-top: 2.45em;
+    margin-bottom: 0.95em;
+    line-height: 1.5;
   }
 
   .writing-list-footer {

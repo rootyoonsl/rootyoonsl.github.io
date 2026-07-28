@@ -685,7 +685,15 @@ test("articles use the restored serif stack on a quiet paper surface", async () 
 
   assert.match(css, /\.markdown-list--unordered\s*\{[\s\S]*?list-style-type:\s*disc/u);
   assert.match(css, /\.markdown-list--ordered\s*\{[\s\S]*?list-style-type:\s*decimal/u);
+  assert.match(
+    css,
+    /\.markdown-heading\s*\{[^}]*margin:\s*2\.65em 0 1\.05em;[^}]*line-height:\s*1\.55;[^}]*scroll-margin-top:\s*calc\(var\(--site-header-height\) \+ 20px\)/u,
+  );
   assert.match(css, /\.markdown-heading--6\s*\{[\s\S]*?font-size:\s*0\.92em/u);
+  assert.match(
+    css,
+    /@media \(max-width: 760px\)[\s\S]*?\.markdown-heading\s*\{[^}]*margin-top:\s*2\.45em;[^}]*margin-bottom:\s*0\.95em;[^}]*line-height:\s*1\.5/u,
+  );
   assert.match(css, /\.markdown-task-checkbox\s*\{[\s\S]*?accent-color:\s*var\(--accent-strong\)/u);
   assert.match(
     css,
