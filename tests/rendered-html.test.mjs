@@ -603,7 +603,7 @@ test("articles use the restored serif stack on a quiet paper surface", async () 
 
   assert.match(
     css,
-    /\.simple-article\s*\{[\s\S]*?width:\s*min\([\s\S]*?clamp\(650px,\s*37\.6vw,\s*780px\),[\s\S]*?calc\(100% - 40px\)/u,
+    /\.simple-article\s*\{[\s\S]*?width:\s*min\([\s\S]*?clamp\(750px,\s*37\.6vw,\s*780px\),[\s\S]*?calc\(100% - 40px\)/u,
   );
   assert.match(
     css,
@@ -671,7 +671,7 @@ test("articles use the restored serif stack on a quiet paper surface", async () 
   );
   assert.match(
     tocComponent,
-    /const COMPACT_TOC_QUERY = "\(max-width: 999px\)"/u,
+    /const COMPACT_TOC_QUERY = "\(max-width: 1200px\)"/u,
   );
   assert.match(tocComponent, /useSyncExternalStore/u);
   assert.match(
@@ -725,7 +725,7 @@ test("articles use the restored serif stack on a quiet paper surface", async () 
   assert.match(css, /\.markdown-table\s*\{[\s\S]*?font-size:\s*0\.95em/u);
   assert.match(
     css,
-    /\.article-toc\s*\{[\s\S]*?position:\s*fixed;[\s\S]*?top:\s*calc\(var\(--site-header-height\) \+ 30px\);[\s\S]*?left:\s*calc\(50% \+ clamp\(351px,\s*20\.3vw,\s*416px\)\)/u,
+    /\.article-toc\s*\{[\s\S]*?position:\s*fixed;[\s\S]*?top:\s*calc\(var\(--site-header-height\) \+ 30px\);[\s\S]*?left:\s*calc\(50% \+ clamp\(401px,\s*20\.3vw,\s*416px\)\)/u,
   );
   assert.match(
     css,
@@ -745,7 +745,7 @@ test("articles use the restored serif stack on a quiet paper surface", async () 
   );
   assert.match(
     css,
-    /@media \(max-width: 999px\)\s*\{[\s\S]*?\.article-toc\s*\{[^}]*display:\s*none;[^}]*\}/u,
+    /@media \(max-width: 1200px\)\s*\{[\s\S]*?\.article-toc\s*\{[^}]*display:\s*none;[^}]*\}/u,
   );
 });
 
@@ -1693,7 +1693,7 @@ test("the header wordmark includes the rounded sunset mark", async () => {
   assert.match(html, /class="wordmark-mark"/u);
   assert.match(
     css,
-    /\.wordmark-mark\s*\{[\s\S]*?width:\s*clamp\(26px,\s*1\.505vw,\s*31\.2px\);[\s\S]*?border-radius:\s*7px;[\s\S]*?url\("\/images\/background\.png"\)/u,
+    /\.wordmark-mark\s*\{[\s\S]*?width:\s*clamp\(28px,\s*1\.62vw,\s*33\.6px\);[\s\S]*?border-radius:\s*8px;[\s\S]*?url\("\/images\/background\.png"\)/u,
   );
 });
 

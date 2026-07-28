@@ -3,7 +3,7 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
 import type { MarkdownHeading } from "@/app/markdown-headings";
 
-const COMPACT_TOC_QUERY = "(max-width: 999px)";
+const COMPACT_TOC_QUERY = "(max-width: 1200px)";
 
 function subscribeToCompactLayout(onChange: () => void) {
   const mediaQuery = window.matchMedia(COMPACT_TOC_QUERY);
