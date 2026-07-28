@@ -1408,12 +1408,31 @@ html.sunset:not(.dark)
   margin-bottom: 0;
 }
 
+.markdown-image-trigger {
+  width: max-content;
+  max-width: 100%;
+  margin: 24px auto;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  display: grid;
+  place-items: center;
+  cursor: zoom-in;
+}
+
+.markdown-image-trigger:focus-visible {
+  outline: 2px solid var(--accent-strong);
+  outline-offset: 4px;
+}
+
 .markdown-image {
+  display: block;
   width: auto;
   max-height: 760px;
   max-width: 100%;
   height: auto;
-  margin: 24px auto;
+  margin: 0;
   border-radius: 4px;
   object-fit: contain;
 }

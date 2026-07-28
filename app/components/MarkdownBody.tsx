@@ -1,8 +1,8 @@
-/* eslint-disable @next/next/no-img-element -- Markdown images have arbitrary sources and dimensions. */
 import ReactMarkdown, { type Components } from "react-markdown";
 import rehypeKatex from "rehype-katex";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
+import { MarkdownImage } from "@/app/components/MarkdownImage";
 import { markdownHeadingId } from "@/app/markdown-headings";
 
 type MarkdownBodyProps = {
@@ -157,14 +157,13 @@ const markdownComponents: Components = {
     );
   },
   img: (props) => {
-    const { alt, className, ...domProps } = withoutMarkdownNode(props);
+    const { alt, className, src, title } = withoutMarkdownNode(props);
     return (
-      <img
-        {...domProps}
+      <MarkdownImage
         alt={alt ?? ""}
-        className={joinClassNames("markdown-image", className)}
-        decoding="async"
-        loading="lazy"
+        className={className}
+        src={src}
+        title={title}
       />
     );
   },

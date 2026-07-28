@@ -233,12 +233,21 @@ test("flat posts use Data and Time metadata and copy shared post images", async 
   const childrenPost = posts.find(
     (post) => post.title === "AI와 함께 살아갈 아이들",
   );
+  const retrospectivePost = posts.find(
+    (post) => post.title === "2학년 1학기 (2021) - 회고록 및 강의 후기",
+  );
   assert.ok(blogPost);
   assert.ok(childrenPost);
+  assert.ok(retrospectivePost);
   assert.equal(posts[0], blogPost);
+  assert.equal(posts.at(-1), retrospectivePost);
   assert.equal(blogPost.slug, "260727");
   assert.equal(blogPost.date, "2026-07-27");
   assert.equal(childrenPost.date, "2026-02-06");
+  assert.equal(retrospectivePost.slug, "220113");
+  assert.equal(retrospectivePost.date, "2022-01-13");
+  assert.match(retrospectivePost.body, /### C프로그래밍 \(1학년 지교\)/u);
+  assert.match(retrospectivePost.body, /### 전공기초프로젝트1 \(2학년 전선\)/u);
   assert.match(
     decodeURIComponent(blogPost.body),
     /\/post-images\/260727\/[^)\s]*노을배경\.png/u,
@@ -255,6 +264,16 @@ test("flat posts use Data and Time metadata and copy shared post images", async 
   assert.match(html, /블로그 생성일지/u);
   assert.match(html, /IMG_4797\.JPG/u);
   assert.match(html, /%EB%85%B8%EC%9D%84%EB%B0%B0%EA%B2%BD\.png/u);
+
+  const retrospectiveHtml = await (
+    await render(`/writing/${retrospectivePost.slug}`)
+  ).text();
+  assert.match(
+    retrospectiveHtml,
+    /2학년 1학기 \(2021\) - 회고록 및 강의 후기/u,
+  );
+  assert.match(retrospectiveHtml, /C프로그래밍 \(1학년 지교\)/u);
+  assert.match(retrospectiveHtml, /전공기초프로젝트1 \(2학년 전선\)/u);
 });
 
 test("collection views keep only the compact controls and metadata", async () => {
@@ -614,7 +633,11 @@ test("articles use the restored serif stack on a quiet paper surface", async () 
   );
   assert.match(
     css,
-    /\.markdown-image\s*\{[\s\S]*?width:\s*auto;[\s\S]*?max-width:\s*100%;[\s\S]*?height:\s*auto;[\s\S]*?margin:\s*24px auto/u,
+    /\.markdown-image-trigger\s*\{[\s\S]*?max-width:\s*100%;[\s\S]*?margin:\s*24px auto/u,
+  );
+  assert.match(
+    css,
+    /\.markdown-image\s*\{[\s\S]*?width:\s*auto;[\s\S]*?max-width:\s*100%;[\s\S]*?height:\s*auto;[\s\S]*?margin:\s*0/u,
   );
   assert.match(
     markdownComponent,
@@ -1072,6 +1095,72 @@ test("gallery lightbox keeps viewport sizing and a smooth closing phase", async 
       component.indexOf("setActiveIndex(null)"),
     "사진은 닫힘 전환을 시작한 뒤 갤러리로 돌아가야 합니다.",
   );
+});
+
+test("article images open in the gallery-style lightbox", async () => {
+  const css = await readFile(
+    fileURLToPath(new URL("../app/globals.css", import.meta.url)),
+    "utf8",
+  );
+  const markdownBody = await readFile(
+    fileURLToPath(
+      new URL("../app/components/MarkdownBody.tsx", import.meta.url),
+    ),
+    "utf8",
+  );
+  const component = await readFile(
+    fileURLToPath(
+      new URL("../app/components/MarkdownImage.tsx", import.meta.url),
+    ),
+    "utf8",
+  );
+
+  assert.match(
+    markdownBody,
+    /import \{ MarkdownImage \} from "@\/app\/components\/MarkdownImage"/u,
+  );
+  assert.match(markdownBody, /img:[\s\S]*?<MarkdownImage/u);
+  assert.match(component, /^"use client";/u);
+  assert.match(component, /createPortal\(lightbox, document\.body\)/u);
+  assert.match(component, /className="markdown-image-trigger"/u);
+  assert.match(component, /aria-haspopup="dialog"/u);
+  assert.match(component, /className="photo-lightbox article-image-lightbox"/u);
+  assert.match(component, /className="photo-lightbox-photo-button"/u);
+  assert.match(component, /className="photo-lightbox-close"/u);
+  assert.match(component, /event\.key === "Escape"/u);
+  assert.match(component, /event\.key === "Tab"/u);
+  assert.match(component, /naturalWidth[\s\S]*?naturalHeight/u);
+  assert.match(
+    component,
+    /const MOBILE_PHOTO_TRANSITION_MS = 420;[\s\S]*?max-width: 760px[\s\S]*?MOBILE_PHOTO_TRANSITION_MS/u,
+  );
+  assert.doesNotMatch(
+    component,
+    /document\.body\.style\.overflow/u,
+    "게시글 이미지를 확대해도 본문 스크롤바를 유지해야 합니다.",
+  );
+  assert.ok(
+    component.indexOf('setLightboxPhase("closing")') <
+      component.indexOf("setActiveImage(null)"),
+    "게시글 이미지는 닫힘 전환을 시작한 뒤 본문으로 돌아가야 합니다.",
+  );
+  assert.match(
+    css,
+    /\.markdown-image-trigger\s*\{[\s\S]*?max-width:\s*100%;[\s\S]*?cursor:\s*zoom-in/u,
+  );
+  assert.match(
+    css,
+    /\.markdown-image\s*\{[\s\S]*?max-height:\s*760px;[\s\S]*?object-fit:\s*contain/u,
+  );
+
+  const response = await render("/writing/260727");
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  const imageTriggers =
+    html.match(
+      /<button[^>]*class="markdown-image-trigger"[^>]*aria-haspopup="dialog"[^>]*>/gu,
+    ) ?? [];
+  assert.equal(imageTriggers.length, 6);
 });
 
 test("music selection ignores wheel input and the album art fills the CD", async () => {
