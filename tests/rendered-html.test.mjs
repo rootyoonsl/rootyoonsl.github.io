@@ -1060,7 +1060,7 @@ test("gallery lightbox keeps viewport sizing and a smooth closing phase", async 
   );
   assert.match(
     css,
-    /\.photo-lightbox\s*\{[\s\S]*?--photo-lightbox-y-gap:\s*max\([\s\S]*?inset:\s*var\(--site-header-height\) 0 0;[\s\S]*?padding:[\s\S]*?var\(--photo-lightbox-y-gap\)[\s\S]*?place-items:\s*center/u,
+    /\.photo-lightbox\s*\{[\s\S]*?--photo-lightbox-y-gap:\s*max\([\s\S]*?inset:\s*0;[\s\S]*?z-index:\s*1000;[\s\S]*?padding:[\s\S]*?var\(--photo-lightbox-y-gap\)[\s\S]*?place-items:\s*center/u,
   );
   assert.match(
     css,
@@ -1068,7 +1068,7 @@ test("gallery lightbox keeps viewport sizing and a smooth closing phase", async 
   );
   assert.match(
     css,
-    /\.photo-lightbox-photo-button\[data-orientation="landscape"\][\s\S]*?max-height:\s*min\([\s\S]*?80dvh,[\s\S]*?100dvh - var\(--site-header-height\) - var\(--photo-lightbox-y-gap\)/u,
+    /\.photo-lightbox-photo-button\[data-orientation="landscape"\][\s\S]*?max-height:\s*min\([\s\S]*?80dvh,[\s\S]*?100dvh - var\(--photo-lightbox-y-gap\) - var\(--photo-lightbox-y-gap\)/u,
   );
   assert.match(css, /\.photo-lightbox-image[\s\S]*?object-fit:\s*contain/u);
   assert.match(css, /\.photo-lightbox-close[\s\S]*?border-radius:\s*50%/u);
@@ -1081,6 +1081,7 @@ test("gallery lightbox keeps viewport sizing and a smooth closing phase", async 
     /\.photo-gallery-card:hover,[\s\S]*?\.photo-gallery-card:focus-visible\s*\{[\s\S]*?transform:\s*scale\(1\.018\)/u,
   );
   assert.match(component, /className="photo-lightbox-close"/u);
+  assert.match(component, /createPortal\(lightbox, document\.body\)/u);
   assert.match(
     component,
     /const MOBILE_PHOTO_TRANSITION_MS = 420;[\s\S]*?max-width: 760px[\s\S]*?MOBILE_PHOTO_TRANSITION_MS/u,

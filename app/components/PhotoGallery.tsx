@@ -9,6 +9,7 @@ import {
   type CSSProperties,
   type MouseEvent,
 } from "react";
+import { createPortal } from "react-dom";
 import type { GeneratedPhoto } from "@/app/content.generated";
 import { SpaceHeader } from "@/app/components/SpaceHeader";
 
@@ -203,106 +204,107 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
     };
   }, [closePhoto, isOpen]);
 
+  const lightbox = activePhoto ? (
+    <div
+      className="photo-lightbox"
+      ref={lightboxRef}
+      data-state={lightboxPhase}
+      role="dialog"
+      aria-modal="true"
+      aria-label="확대된 사진"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) closePhoto();
+      }}
+    >
+      <button
+        className="photo-lightbox-photo-button"
+        type="button"
+        ref={enlargedPhotoRef}
+        onClick={closePhoto}
+        aria-label="확대 사진을 닫고 갤러리로 돌아가기"
+        style={
+          {
+            "--active-photo-ratio": activePhotoRatio,
+            "--active-photo-height-bound-width":
+              `${activePhotoRatio * 80}vh`,
+            "--active-photo-dynamic-height-bound-width":
+              `${activePhotoRatio * 80}dvh`,
+          } as CSSProperties
+        }
+        data-orientation={
+          activePhoto.width >= activePhoto.height ? "landscape" : "portrait"
+        }
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element -- Generated local display images are resized without cropping. */}
+        <img
+          className="photo-lightbox-image"
+          key={activePhoto.id}
+          src={activePhoto.src}
+          alt={activePhoto.alt}
+          width={activePhoto.width}
+          height={activePhoto.height}
+          decoding="async"
+          data-orientation={
+            activePhoto.width >= activePhoto.height
+              ? "landscape"
+              : "portrait"
+          }
+        />
+      </button>
+      <button
+        className="photo-lightbox-close"
+        type="button"
+        onClick={closePhoto}
+        aria-label="확대 사진 닫기"
+        title="닫기"
+      >
+        <X size={19} aria-hidden="true" />
+      </button>
+    </div>
+  ) : null;
+
   return (
-    <section className="photo-gallery-root space-page">
-      <SpaceHeader
-        title="사진 공간"
-        count={photos.length}
-        countLabel={`사진 ${photos.length}장`}
-      />
+    <>
+      <section className="photo-gallery-root space-page">
+        <SpaceHeader
+          title="사진 공간"
+          count={photos.length}
+          countLabel={`사진 ${photos.length}장`}
+        />
 
-      <ol className="photo-gallery-grid" aria-label="촬영일 최신순 사진 목록">
-        {photos.map((photo, index) => (
-          <li
-            key={photo.id}
-            style={getPhotoLayoutStyle(photo)}
-            data-orientation={
-              photo.width > photo.height ? "landscape" : "portrait"
-            }
-          >
-            <button
-              className="photo-gallery-card"
-              type="button"
-              onClick={(event) => openPhoto(index, event)}
-              onPointerEnter={() => preloadPhoto(photo)}
-              onPointerDown={() => preloadPhoto(photo)}
-              onFocus={() => preloadPhoto(photo)}
-              aria-label={`${photo.displayDate}에 촬영한 ${index + 1}번째 사진 확대`}
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element -- Generated local thumbnails are resized without cropping. */}
-              <img
-                src={photo.thumbnail}
-                alt=""
-                width={photo.width}
-                height={photo.height}
-                loading={index < 6 ? "eager" : "lazy"}
-                decoding="async"
-              />
-            </button>
-          </li>
-        ))}
-      </ol>
-
-      {activePhoto && (
-        <div
-          className="photo-lightbox"
-          ref={lightboxRef}
-          data-state={lightboxPhase}
-          role="dialog"
-          aria-modal="true"
-          aria-label="확대된 사진"
-          onMouseDown={(event) => {
-            if (event.target === event.currentTarget) closePhoto();
-          }}
-        >
-          <button
-            className="photo-lightbox-photo-button"
-            type="button"
-            ref={enlargedPhotoRef}
-            onClick={closePhoto}
-            aria-label="확대 사진을 닫고 갤러리로 돌아가기"
-            style={
-              {
-                "--active-photo-ratio": activePhotoRatio,
-                "--active-photo-height-bound-width":
-                  `${activePhotoRatio * 80}vh`,
-                "--active-photo-dynamic-height-bound-width":
-                  `${activePhotoRatio * 80}dvh`,
-              } as CSSProperties
-            }
-            data-orientation={
-              activePhoto.width >= activePhoto.height
-                ? "landscape"
-                : "portrait"
-            }
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element -- Generated local display images are resized without cropping. */}
-            <img
-              className="photo-lightbox-image"
-              key={activePhoto.id}
-              src={activePhoto.src}
-              alt={activePhoto.alt}
-              width={activePhoto.width}
-              height={activePhoto.height}
-              decoding="async"
+        <ol className="photo-gallery-grid" aria-label="촬영일 최신순 사진 목록">
+          {photos.map((photo, index) => (
+            <li
+              key={photo.id}
+              style={getPhotoLayoutStyle(photo)}
               data-orientation={
-                activePhoto.width >= activePhoto.height
-                  ? "landscape"
-                  : "portrait"
+                photo.width > photo.height ? "landscape" : "portrait"
               }
-            />
-          </button>
-          <button
-            className="photo-lightbox-close"
-            type="button"
-            onClick={closePhoto}
-            aria-label="확대 사진 닫기"
-            title="닫기"
-          >
-            <X size={19} aria-hidden="true" />
-          </button>
-        </div>
-      )}
-    </section>
+            >
+              <button
+                className="photo-gallery-card"
+                type="button"
+                onClick={(event) => openPhoto(index, event)}
+                onPointerEnter={() => preloadPhoto(photo)}
+                onPointerDown={() => preloadPhoto(photo)}
+                onFocus={() => preloadPhoto(photo)}
+                aria-label={`${photo.displayDate}에 촬영한 ${index + 1}번째 사진 확대`}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element -- Generated local thumbnails are resized without cropping. */}
+                <img
+                  src={photo.thumbnail}
+                  alt=""
+                  width={photo.width}
+                  height={photo.height}
+                  loading={index < 6 ? "eager" : "lazy"}
+                  decoding="async"
+                />
+              </button>
+            </li>
+          ))}
+        </ol>
+      </section>
+      {lightbox && createPortal(lightbox, document.body)}
+    </>
   );
 }

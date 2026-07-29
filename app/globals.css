@@ -2653,8 +2653,8 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
   );
 
   position: fixed;
-  inset: var(--site-header-height) 0 0;
-  z-index: 400;
+  inset: 0;
+  z-index: 1000;
   padding:
     var(--photo-lightbox-y-gap)
     max(12px, env(safe-area-inset-right))
@@ -2709,8 +2709,7 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
   height: min(
     80dvh,
     calc(
-      100dvh - var(--site-header-height) - var(--photo-lightbox-y-gap) -
-        var(--photo-lightbox-y-gap)
+      100dvh - var(--photo-lightbox-y-gap) - var(--photo-lightbox-y-gap)
     )
   );
   max-width: calc(100vw - 24px);
@@ -2734,8 +2733,7 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
   max-height: min(
     80dvh,
     calc(
-      100dvh - var(--site-header-height) - var(--photo-lightbox-y-gap) -
-        var(--photo-lightbox-y-gap)
+      100dvh - var(--photo-lightbox-y-gap) - var(--photo-lightbox-y-gap)
     )
   );
   aspect-ratio: var(--active-photo-ratio);
