@@ -948,6 +948,7 @@ html.sunset:not(.dark) .compact-writing-list {
   display: flex;
   flex-direction: column;
   gap: 5px;
+  text-align: left;
   transform: scale(1);
   transform-origin: left center;
   transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
@@ -1278,9 +1279,7 @@ html.sunset:not(.dark)
 
 .markdown-paragraph {
   margin: 0 0 1.75em;
-  text-align: justify;
-  text-align-last: left;
-  text-justify: inter-character;
+  text-align: left;
   hanging-punctuation: allow-end;
 }
 
@@ -1361,9 +1360,7 @@ html.sunset:not(.dark)
 .markdown-list-item {
   margin: 0.35em 0;
   padding-left: 0.15em;
-  text-align: justify;
-  text-align-last: left;
-  text-justify: inter-character;
+  text-align: left;
 }
 
 .markdown-list-item::marker {
@@ -2963,6 +2960,14 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
 }
 
 @media (max-width: 760px) {
+  .site-root:not(.is-home) {
+    background: var(--mobile-nav-background);
+  }
+
+  .site-root:not(.is-home) .sunset-theme-cover {
+    display: none;
+  }
+
   .site-header {
     background: var(--mobile-nav-background);
     backdrop-filter: none;
@@ -3036,6 +3041,10 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
     grid-template-columns: 1fr auto;
   }
 
+  .wordmark-copy {
+    font-size: 15px;
+  }
+
   .header-actions {
     right: 12px;
   }
@@ -3078,6 +3087,7 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
     padding-inline: 12px;
     border-bottom: 1px solid var(--line);
     justify-content: flex-start;
+    font-size: 16px;
   }
 
   .primary-nav > a.active {
@@ -3146,6 +3156,7 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
 
   .home-navigation a {
     width: 100%;
+    font-size: 16px;
   }
 
   .home-github-link {
@@ -3169,14 +3180,24 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
     grid-area: number;
     width: 28px;
     height: 28px;
+    font-size: 16px;
   }
 
   .compact-writing-copy {
     grid-area: copy;
   }
 
+  .compact-writing-copy strong {
+    font-size: 17px;
+  }
+
   .compact-writing-date {
-    font-size: 12px;
+    font-size: 13px;
+  }
+
+  .compact-writing-summary {
+    font-size: 15px;
+    line-height: 1.6;
   }
 
   .compact-writing-thumbnail {
@@ -3193,10 +3214,18 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
     margin-bottom: 24px;
   }
 
+  .back-link,
+  .simple-article-header p {
+    font-size: 14px;
+  }
+
   .markdown-body {
-    padding: 22px 18px 26px;
-    font-size: 15px;
-    line-height: 1.68;
+    padding: 0 2px 30px;
+    border-radius: 0;
+    background: transparent;
+    font-size: 17px;
+    line-height: 1.75;
+    box-shadow: none;
   }
 
   .markdown-heading {
@@ -3207,6 +3236,19 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
 
   .writing-list-footer {
     padding-top: 14px;
+  }
+
+  .writing-page-button,
+  .writing-page-size-select {
+    font-size: 14px;
+  }
+
+  .article-nav-label {
+    font-size: 13px;
+  }
+
+  .article-nav-title {
+    font-size: 14px;
   }
 
   .playlist-browser {
@@ -3249,6 +3291,7 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
     width: 100%;
     height: min(58svh, 520px);
     min-height: 280px;
+    font-size: 16px;
   }
 
   .playlist-browser-table-wrap {
@@ -3264,10 +3307,11 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
 
   .playlist-browser-table th {
     height: 34px;
+    font-size: 14px;
   }
 
   .playlist-browser-table {
-    font-size: 14px;
+    font-size: 15px;
   }
 
   .playlist-browser-table td {
@@ -3325,6 +3369,10 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
     justify-content: flex-start;
   }
 
+  .space-count {
+    font-size: 14px;
+  }
+
   .space-filter {
     width: min(220px, 58vw);
     flex-basis: min(220px, 58vw);
@@ -3336,7 +3384,12 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
   }
 
   .filter-menu-label {
-    font-size: 13px;
+    font-size: 14px;
+  }
+
+  .filter-menu-trigger,
+  .filter-menu-option {
+    font-size: 15px;
   }
 
   .filter-menu-popover {
@@ -3389,11 +3442,11 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
   }
 
   .compact-writing-copy strong {
-    font-size: 15px;
+    font-size: 17px;
   }
 
   .compact-writing-summary {
-    font-size: 13px;
+    font-size: 14px;
     -webkit-line-clamp: 2;
   }
 
@@ -3455,11 +3508,11 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
   }
 
   .book-library-card-title {
-    font-size: 15px;
+    font-size: 16px;
   }
 
   .book-library-card-author {
-    font-size: 13px;
+    font-size: 14px;
   }
 
   .photo-gallery-grid {
@@ -3481,7 +3534,7 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
   .compact-writing-number {
     width: 26px;
     height: 26px;
-    font-size: 15px;
+    font-size: 16px;
   }
 
   .compact-writing-copy strong {

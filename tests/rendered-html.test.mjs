@@ -629,7 +629,11 @@ test("articles use the restored serif stack on a quiet paper surface", async () 
   );
   assert.match(
     css,
-    /\.markdown-paragraph\s*\{[\s\S]*?margin:\s*0 0 1\.75em;[\s\S]*?text-align:\s*justify;[\s\S]*?text-align-last:\s*left;[\s\S]*?text-justify:\s*inter-character/u,
+    /\.markdown-paragraph\s*\{[\s\S]*?margin:\s*0 0 1\.75em;[\s\S]*?text-align:\s*left/u,
+  );
+  assert.match(
+    css,
+    /\.markdown-list-item\s*\{[\s\S]*?text-align:\s*left/u,
   );
   assert.match(
     css,
@@ -1672,11 +1676,15 @@ test("core text remains readable at desktop and compact widths", async () => {
   );
   assert.match(
     css,
-    /@media \(max-width: 760px\)[\s\S]*?\.compact-writing-date\s*\{[^}]*font-size:\s*12px;[\s\S]*?\.markdown-body\s*\{[^}]*font-size:\s*15px;[\s\S]*?\.playlist-browser-table\s*\{[^}]*font-size:\s*14px;[\s\S]*?\.filter-menu\s*\{[^}]*grid-template-columns:\s*54px minmax\(0,\s*1fr\);[\s\S]*?\.filter-menu-label\s*\{[^}]*font-size:\s*13px;/u,
+    /@media \(max-width: 760px\)[\s\S]*?\.compact-writing-copy strong\s*\{[^}]*font-size:\s*17px;[\s\S]*?\.compact-writing-date\s*\{[^}]*font-size:\s*13px;[\s\S]*?\.compact-writing-summary\s*\{[^}]*font-size:\s*15px;[\s\S]*?\.markdown-body\s*\{[^}]*font-size:\s*17px;[^}]*line-height:\s*1\.75;[\s\S]*?\.playlist-browser-table\s*\{[^}]*font-size:\s*15px;[\s\S]*?\.filter-menu\s*\{[^}]*grid-template-columns:\s*54px minmax\(0,\s*1fr\);[\s\S]*?\.filter-menu-label\s*\{[^}]*font-size:\s*14px;/u,
   );
   assert.match(
     css,
-    /@media \(max-width: 520px\)[\s\S]*?\.compact-writing-copy strong\s*\{[^}]*font-size:\s*15px;[\s\S]*?\.compact-writing-summary\s*\{[^}]*font-size:\s*13px;[\s\S]*?\.book-library-card-title\s*\{[^}]*font-size:\s*15px;[\s\S]*?\.book-library-card-author\s*\{[^}]*font-size:\s*13px;/u,
+    /@media \(max-width: 760px\)[\s\S]*?\.markdown-body\s*\{[^}]*padding:\s*0 2px 30px;[^}]*border-radius:\s*0;[^}]*background:\s*transparent;[^}]*box-shadow:\s*none/u,
+  );
+  assert.match(
+    css,
+    /@media \(max-width: 520px\)[\s\S]*?\.compact-writing-copy strong\s*\{[^}]*font-size:\s*17px;[\s\S]*?\.compact-writing-summary\s*\{[^}]*font-size:\s*14px;[\s\S]*?\.book-library-card-title\s*\{[^}]*font-size:\s*16px;[\s\S]*?\.book-library-card-author\s*\{[^}]*font-size:\s*14px;/u,
   );
 });
 
@@ -1751,6 +1759,18 @@ test("mobile navigation is an opaque sidebar and every space menu uses the liter
   assert.match(
     css,
     /@media \(max-width: 760px\)[\s\S]*?\.primary-nav\s*\{[\s\S]*?background:\s*var\(--mobile-nav-background\);[\s\S]*?backdrop-filter:\s*none;[\s\S]*?-webkit-backdrop-filter:\s*none/u,
+  );
+  assert.match(
+    css,
+    /@media \(max-width: 760px\)[\s\S]*?\.site-root:not\(\.is-home\)\s*\{[^}]*background:\s*var\(--mobile-nav-background\)/u,
+  );
+  assert.match(
+    css,
+    /@media \(max-width: 760px\)[\s\S]*?\.site-root:not\(\.is-home\) \.sunset-theme-cover\s*\{[^}]*display:\s*none/u,
+  );
+  assert.match(
+    css,
+    /@media \(max-width: 760px\)[\s\S]*?\.primary-nav > a\s*\{[^}]*font-size:\s*16px/u,
   );
   assert.match(
     css,
