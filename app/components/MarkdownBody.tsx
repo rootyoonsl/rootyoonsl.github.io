@@ -2,8 +2,10 @@ import ReactMarkdown, { type Components } from "react-markdown";
 import rehypeKatex from "rehype-katex";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
+import { MarkdownGallery } from "@/app/components/MarkdownGallery";
 import { MarkdownImage } from "@/app/components/MarkdownImage";
 import { markdownHeadingId } from "@/app/markdown-headings";
+import { remarkGalleryDirectives } from "@/app/remark-gallery";
 
 type MarkdownBodyProps = {
   content: string;
@@ -136,6 +138,25 @@ const markdownComponents: Components = {
         {...domProps}
         className={joinClassNames("markdown-paragraph", className)}
       />
+    );
+  },
+  div: (props) => {
+    const { className, children, ...domProps } = withoutMarkdownNode(props);
+    const classNames = className?.split(/\s+/u) ?? [];
+    const layout = classNames.includes("markdown-gallery-source--slider")
+      ? "slider"
+      : classNames.includes("markdown-gallery-source--grid")
+        ? "grid"
+        : null;
+
+    if (layout) {
+      return <MarkdownGallery layout={layout}>{children}</MarkdownGallery>;
+    }
+
+    return (
+      <div {...domProps} className={className}>
+        {children}
+      </div>
     );
   },
   a: (props) => {
@@ -348,7 +369,7 @@ export function MarkdownBody({
       <ReactMarkdown
         components={markdownComponents}
         rehypePlugins={[[rehypeKatex, { strict: false }]]}
-        remarkPlugins={[remarkGfm, remarkMath]}
+        remarkPlugins={[remarkGfm, remarkMath, remarkGalleryDirectives]}
         skipHtml
       >
         {content}

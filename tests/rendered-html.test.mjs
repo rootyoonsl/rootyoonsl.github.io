@@ -229,6 +229,9 @@ test("the updated AI reflection keeps its clean title and new ending", () => {
 });
 
 test("flat posts use Data and Time metadata and copy shared post images", async () => {
+  const exhibitionPost = posts.find(
+    (post) => post.title === "하루키를 말할 때 우리가 하고 싶은 이야기",
+  );
   const blogPost = posts.find((post) => post.title === "블로그 생성일지");
   const childrenPost = posts.find(
     (post) => post.title === "AI와 함께 살아갈 아이들",
@@ -236,11 +239,14 @@ test("flat posts use Data and Time metadata and copy shared post images", async 
   const retrospectivePost = posts.find(
     (post) => post.title === "2학년 1학기 (2021) - 회고록 및 강의 후기",
   );
+  assert.ok(exhibitionPost);
   assert.ok(blogPost);
   assert.ok(childrenPost);
   assert.ok(retrospectivePost);
-  assert.equal(posts[0], blogPost);
+  assert.equal(posts[0], exhibitionPost);
   assert.equal(posts.at(-1), retrospectivePost);
+  assert.equal(exhibitionPost.slug, "260804");
+  assert.equal(exhibitionPost.date, "2026-08-04");
   assert.equal(blogPost.slug, "260727");
   assert.equal(blogPost.date, "2026-07-27");
   assert.equal(childrenPost.date, "2026-02-06");
@@ -645,7 +651,7 @@ test("articles use the restored serif stack on a quiet paper surface", async () 
   );
   assert.match(
     markdownComponent,
-    /remarkPlugins=\{\[remarkGfm,\s*remarkMath\]\}/u,
+    /remarkPlugins=\{\[remarkGfm,\s*remarkMath,\s*remarkGalleryDirectives\]\}/u,
   );
   assert.match(
     markdownComponent,
@@ -1166,6 +1172,61 @@ test("article images open in the gallery-style lightbox", async () => {
       /<button[^>]*class="markdown-image-trigger"[^>]*aria-haspopup="dialog"[^>]*>/gu,
     ) ?? [];
   assert.equal(imageTriggers.length, 6);
+});
+
+test("article galleries render as a two-column grid and an interactive slider", async () => {
+  const css = await readFile(
+    fileURLToPath(new URL("../app/globals.css", import.meta.url)),
+    "utf8",
+  );
+  const markdownBody = await readFile(
+    fileURLToPath(
+      new URL("../app/components/MarkdownBody.tsx", import.meta.url),
+    ),
+    "utf8",
+  );
+  const gallery = await readFile(
+    fileURLToPath(
+      new URL("../app/components/MarkdownGallery.tsx", import.meta.url),
+    ),
+    "utf8",
+  );
+
+  assert.match(markdownBody, /remarkGalleryDirectives/u);
+  assert.match(markdownBody, /<MarkdownGallery layout=\{layout\}>/u);
+  assert.match(
+    css,
+    /\.markdown-gallery--grid\s*\{[\s\S]*?grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/u,
+  );
+  assert.match(css, /\.markdown-gallery-slide\[hidden\]\s*\{[\s\S]*?display:\s*none/u);
+  assert.match(gallery, /event\.key === "ArrowLeft"/u);
+  assert.match(gallery, /event\.key === "ArrowRight"/u);
+  assert.match(gallery, /const DRAG_THRESHOLD = 44/u);
+  assert.match(gallery, /onPointerDown=\{handlePointerDown\}/u);
+  assert.match(gallery, /onPointerMove=\{handlePointerMove\}/u);
+  assert.match(gallery, /onPointerUp=\{finishDrag\}/u);
+  assert.match(gallery, /onClickCapture=/u);
+  assert.match(gallery, /aria-label="이전 사진"/u);
+  assert.match(gallery, /aria-label="다음 사진"/u);
+
+  const response = await render("/writing/260804");
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  assert.match(html, /markdown-gallery markdown-gallery--grid/u);
+  assert.match(html, /markdown-gallery markdown-gallery--slider/u);
+
+  const imageTriggers =
+    html.match(
+      /<button[^>]*class="markdown-image-trigger"[^>]*aria-haspopup="dialog"[^>]*>/gu,
+    ) ?? [];
+  assert.equal(imageTriggers.length, 8);
+
+  let previousIndex = -1;
+  for (let imageNumber = 1; imageNumber <= 8; imageNumber += 1) {
+    const imageIndex = html.indexOf(`260804_${imageNumber}.jpeg`);
+    assert.ok(imageIndex > previousIndex, `260804_${imageNumber}.jpeg 순서를 확인합니다.`);
+    previousIndex = imageIndex;
+  }
 });
 
 test("music selection ignores wheel input and the album art fills the CD", async () => {
