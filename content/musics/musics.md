@@ -147,9 +147,6 @@ All the Time
 [https://youtu.be/SbZDSeMxyO0?si=OmbWfo37LSioUzXX](https://youtu.be/SbZDSeMxyO0?si=OmbWfo37LSioUzXX)  
 동그라미
 
-[https://youtu.be/mxUMo9vX5N0?si=rqBz6ra0i7IlCbYr](https://youtu.be/mxUMo9vX5N0?si=rqBz6ra0i7IlCbYr)  
-52!
-
 ————————————————————————  
 신인류
 
@@ -252,6 +249,9 @@ Lamp
 
 [김세정(KIM SEJEONG) PRE-RELEASE '항해' M/V](https://youtu.be/YicdhLdRcmo?si=2M1ZPt5_mSOWTZsP)  
 항해
+
+[https://youtu.be/KtC-YoxpPrU?si=pbkKiveog0yuYHe0](https://youtu.be/KtC-YoxpPrU?si=pbkKiveog0yuYHe0)
+SKYLINE
 
 ————————————————————————  
 박효신  

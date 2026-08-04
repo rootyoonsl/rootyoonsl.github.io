@@ -3170,17 +3170,14 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
 
   .compact-writing-row {
     min-height: 112px;
-    grid-template-columns: 30px minmax(0, 1fr) 104px;
-    grid-template-areas: "number copy thumbnail";
+    grid-template-columns: minmax(0, 1fr) 104px;
+    grid-template-areas: "copy thumbnail";
     align-items: center;
     gap: 10px;
   }
 
   .compact-writing-number {
-    grid-area: number;
-    width: 28px;
-    height: 28px;
-    font-size: 16px;
+    display: none;
   }
 
   .compact-writing-copy {
@@ -3395,6 +3392,198 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
   .filter-menu-popover {
     width: min(368px, calc(100vw - 24px));
   }
+
+  /* Touch layouts should not retain desktop hover feedback after a tap. */
+  .primary-nav > a:hover {
+    color: var(--muted);
+  }
+
+  .primary-nav > a.active:hover {
+    color: var(--foreground);
+  }
+
+  .header-action:hover,
+  .icon-button:hover,
+  .search-result:hover {
+    background: transparent;
+  }
+
+  .header-action[aria-pressed="true"]:hover {
+    color: var(--accent-strong);
+    background: var(--accent-soft);
+  }
+
+  .writing-page-button:hover:not(:disabled),
+  .playlist-page-button:hover:not(:disabled) {
+    background: transparent;
+    color: var(--muted);
+  }
+
+  .writing-page-button[aria-current="page"]:hover,
+  .playlist-page-button[aria-current="page"]:hover {
+    background: var(--muted);
+    color: var(--background);
+  }
+
+  .writing-page-size-select:hover {
+    border-color: var(--line);
+    color: var(--muted);
+  }
+
+  .back-link:hover {
+    color: var(--muted);
+  }
+
+  .appearance-toggle:hover svg,
+  .home-github-link:hover,
+  .compact-writing-row:hover,
+  .compact-writing-row:focus-visible,
+  .compact-writing-row:hover .compact-writing-thumbnail img,
+  .compact-writing-row:focus-visible .compact-writing-thumbnail img,
+  .compact-writing-row:hover .compact-writing-copy,
+  .compact-writing-row:focus-visible .compact-writing-copy,
+  .compact-writing-row:hover .compact-writing-thumbnail-placeholder,
+  .compact-writing-row:focus-visible .compact-writing-thumbnail-placeholder,
+  .book-library-card:hover .book-library-cover-wrap,
+  .playlist-browser-row:hover .playlist-browser-track-number,
+  .playlist-browser-row:focus-within .playlist-browser-track-number,
+  .playlist-browser-row:hover .playlist-browser-track-button,
+  .playlist-browser-row:focus-within .playlist-browser-track-button,
+  .playlist-browser-row:hover .playlist-browser-artist,
+  .playlist-browser-row:focus-within .playlist-browser-artist,
+  .playlist-browser-thumbnail-link:hover .playlist-browser-thumbnail,
+  .photo-gallery-card:hover {
+    transform: none;
+  }
+
+  .home-navigation a:hover {
+    text-decoration: none;
+  }
+
+  .home-github-link:hover {
+    color: rgba(255, 255, 255, 0.88);
+  }
+
+  .compact-writing-row:hover,
+  .compact-writing-row:focus-visible,
+  .playlist-browser-row:not(.playlist-browser-row-active):hover td,
+  .playlist-browser-row:not(.playlist-browser-row-active):focus-within td,
+  .filter-menu-option:hover {
+    background: transparent;
+  }
+
+  .compact-writing-row:hover,
+  .compact-writing-row:focus-visible {
+    z-index: auto;
+  }
+
+  .compact-writing-row:hover .compact-writing-copy strong,
+  .compact-writing-row:focus-visible .compact-writing-copy strong,
+  .book-library-card:hover .book-library-card-title {
+    color: inherit;
+  }
+
+  .compact-writing-row:hover .compact-writing-summary,
+  .compact-writing-row:focus-visible .compact-writing-summary {
+    color: var(--muted);
+  }
+
+  .compact-writing-row:hover .compact-writing-thumbnail-placeholder,
+  .compact-writing-row:focus-visible .compact-writing-thumbnail-placeholder {
+    border-color: color-mix(in srgb, var(--line-strong) 78%, transparent);
+    box-shadow:
+      inset 0 1px 0
+        color-mix(in srgb, var(--foreground) 16%, transparent),
+      inset 1px 0 0
+        color-mix(in srgb, var(--foreground) 7%, transparent),
+      inset 0 -1px 0
+        color-mix(in srgb, var(--background) 16%, transparent),
+      0 10px 26px color-mix(in srgb, var(--foreground) 6%, transparent);
+  }
+
+  .playlist-browser-row:not(.playlist-browser-row-active):hover td:first-child,
+  .playlist-browser-row:not(.playlist-browser-row-active):focus-within
+    td:first-child {
+    box-shadow: none;
+  }
+
+  .playlist-browser-row-active:hover .playlist-browser-track-number,
+  .playlist-browser-row-active:focus-within .playlist-browser-track-number {
+    color: var(--foreground);
+    transform: scale(1.08);
+  }
+
+  .playlist-browser-row:not(.playlist-browser-row-active):hover
+    .playlist-browser-track-number,
+  .playlist-browser-row:not(.playlist-browser-row-active):focus-within
+    .playlist-browser-track-number {
+    color: inherit;
+  }
+
+  .playlist-browser-track-button[data-overflowing="true"]:hover
+    .playlist-browser-track-title-text,
+  .filter-menu-option:hover {
+    animation: none;
+    transform: none;
+  }
+
+  .playlist-browser-thumbnail-link:hover .playlist-browser-thumbnail {
+    opacity: 0.84;
+  }
+
+  .filter-menu-trigger:hover {
+    border-color: var(--line);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.12),
+      0 4px 14px rgba(30, 26, 29, 0.035);
+    transform: none;
+  }
+
+  .filter-menu-option:hover {
+    color: var(--muted);
+  }
+
+  a.article-nav-tab:hover {
+    background: color-mix(in srgb, var(--surface) 94%, var(--background));
+    color: var(--muted);
+    opacity: 0.96;
+    transform: none;
+  }
+
+  .book-library-card:hover .book-library-cover-wrap {
+    border-color: var(--line);
+    box-shadow: none;
+  }
+
+  .filter-menu[data-open="true"] .filter-menu-trigger:hover {
+    border-color: color-mix(
+      in srgb,
+      var(--accent-strong) 56%,
+      var(--line-strong)
+    );
+    background: var(--filter-menu-background);
+    box-shadow:
+      0 0 0 3px var(--accent-soft),
+      0 9px 24px rgba(30, 26, 29, 0.09);
+  }
+
+  .filter-menu-option[data-selected="true"]:hover {
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+  }
+
+  .photo-gallery-card:hover img {
+    filter: none;
+  }
+
+  .photo-gallery-card:hover {
+    z-index: auto;
+    box-shadow: none;
+  }
+
+  .photo-lightbox-close:hover {
+    background: rgba(18, 18, 20, 0.58);
+  }
 }
 
 @media (max-width: 430px) {
@@ -3433,7 +3622,7 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
 
 @media (max-width: 520px) {
   .compact-writing-row {
-    grid-template-columns: 30px minmax(0, 1fr) 84px;
+    grid-template-columns: minmax(0, 1fr) 84px;
     gap: 5px 8px;
   }
 
@@ -3527,14 +3716,8 @@ html.sunset:not(.dark) .playlist-page-button[aria-current="page"] {
 @media (max-width: 380px) {
   .compact-writing-row {
     min-height: 96px;
-    grid-template-columns: 26px minmax(0, 1fr) 72px;
+    grid-template-columns: minmax(0, 1fr) 72px;
     gap: 6px;
-  }
-
-  .compact-writing-number {
-    width: 26px;
-    height: 26px;
-    font-size: 16px;
   }
 
   .compact-writing-copy strong {

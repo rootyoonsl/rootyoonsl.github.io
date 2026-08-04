@@ -394,11 +394,6 @@ export const musics: CuratedMusicLink[] = [
     "url": "https://youtu.be/SbZDSeMxyO0?si=OmbWfo37LSioUzXX"
   },
   {
-    "title": "52!",
-    "artist": "Low Hanging Fruits",
-    "url": "https://youtu.be/mxUMo9vX5N0?si=rqBz6ra0i7IlCbYr"
-  },
-  {
     "title": "Huf",
     "artist": "신인류",
     "url": "https://youtu.be/5mgYzf1RXYc?si=dnVqxVujkKTPBctZ"
@@ -527,6 +522,11 @@ export const musics: CuratedMusicLink[] = [
     "title": "항해",
     "artist": "김세정",
     "url": "https://youtu.be/YicdhLdRcmo?si=2M1ZPt5_mSOWTZsP"
+  },
+  {
+    "title": "SKYLINE",
+    "artist": "김세정",
+    "url": "https://youtu.be/KtC-YoxpPrU?si=pbkKiveog0yuYHe0"
   },
   {
     "title": "Home",

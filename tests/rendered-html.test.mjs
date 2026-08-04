@@ -1688,6 +1688,38 @@ test("core text remains readable at desktop and compact widths", async () => {
   );
 });
 
+test("mobile writing rows hide numbering and suppress touch hover feedback", async () => {
+  const css = await readFile(
+    fileURLToPath(new URL("../app/globals.css", import.meta.url)),
+    "utf8",
+  );
+
+  assert.match(
+    css,
+    /@media \(max-width: 760px\)[\s\S]*?\.compact-writing-row\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\) 104px;[^}]*grid-template-areas:\s*"copy thumbnail"/u,
+  );
+  assert.match(
+    css,
+    /@media \(max-width: 760px\)[\s\S]*?\.compact-writing-number\s*\{[^}]*display:\s*none/u,
+  );
+  assert.match(
+    css,
+    /@media \(max-width: 760px\)[\s\S]*?\.compact-writing-row:hover,[\s\S]*?\.compact-writing-row:focus-visible,[\s\S]*?background:\s*transparent/u,
+  );
+  assert.match(
+    css,
+    /@media \(max-width: 760px\)[\s\S]*?\.photo-gallery-card:hover\s*\{[^}]*z-index:\s*auto;[^}]*box-shadow:\s*none/u,
+  );
+  assert.match(
+    css,
+    /@media \(max-width: 520px\)[\s\S]*?\.compact-writing-row\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\) 84px/u,
+  );
+  assert.match(
+    css,
+    /@media \(max-width: 380px\)[\s\S]*?\.compact-writing-row\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\) 72px/u,
+  );
+});
+
 test("the header wordmark includes the rounded sunset mark", async () => {
   const [response, css] = await Promise.all([
     render("/writing"),
