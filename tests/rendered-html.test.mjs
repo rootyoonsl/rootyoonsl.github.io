@@ -3,7 +3,7 @@ import { readFile, readdir } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 import sharp from "sharp";
-import { musics, posts } from "../app/content.generated.ts";
+import { books, musics, posts } from "../app/content.generated.ts";
 import { extractMarkdownHeadings } from "../app/markdown-headings.ts";
 import { MUSIC_LYRICS } from "../app/music-lyrics.ts";
 import {
@@ -215,6 +215,45 @@ test("music source supports plain artist headings and the complete update", () =
       (track) => track.artist === "이승윤" && track.title === "역성",
     ),
   );
+});
+
+test("book titles, authors, links, and covers come from Booklists.md", async () => {
+  const [bookSource, library] = await Promise.all([
+    readFile(
+      fileURLToPath(
+        new URL("../content/books/Booklists.md", import.meta.url),
+      ),
+      "utf8",
+    ),
+    readFile(
+      fileURLToPath(new URL("../app/library.ts", import.meta.url)),
+      "utf8",
+    ),
+  ]);
+
+  assert.equal(books.length, 23);
+  assert.equal(bookSource.match(/^##\s+/gmu)?.length, books.length);
+  assert.match(bookSource, /^## 프로젝트 헤일메리$/mu);
+  assert.match(bookSource, /^- 저자: 앤디 위어$/mu);
+  assert.match(
+    bookSource,
+    /^- 교보문고: https:\/\/product\.kyobobook\.co\.kr\/detail\/S000000479333$/mu,
+  );
+  assert.match(
+    bookSource,
+    /^- 표지: https:\/\/image\.yes24\.com\/goods\/101375755\/XL$/mu,
+  );
+  assert.doesNotMatch(
+    library,
+    /library-meta|verified\?\.author|verified\?\.cover/u,
+  );
+
+  for (const book of books) {
+    assert.ok(book.title, "책 제목이 필요합니다.");
+    assert.ok(book.author, `${book.title}: 저자가 필요합니다.`);
+    assert.match(book.url, /^https:\/\/product\.kyobobook\.co\.kr\/detail\//u);
+    assert.match(book.cover, /^https?:\/\//u);
+  }
 });
 
 test("the updated AI reflection keeps its clean title and new ending", () => {
@@ -1174,7 +1213,7 @@ test("article images open in the gallery-style lightbox", async () => {
   assert.equal(imageTriggers.length, 6);
 });
 
-test("article galleries render as a two-column grid and an interactive slider", async () => {
+test("article galleries use only a two-column grid", async () => {
   const css = await readFile(
     fileURLToPath(new URL("../app/globals.css", import.meta.url)),
     "utf8",
@@ -1193,27 +1232,19 @@ test("article galleries render as a two-column grid and an interactive slider", 
   );
 
   assert.match(markdownBody, /remarkGalleryDirectives/u);
-  assert.match(markdownBody, /<MarkdownGallery layout=\{layout\}>/u);
+  assert.match(markdownBody, /<MarkdownGallery>\{children\}<\/MarkdownGallery>/u);
   assert.match(
     css,
     /\.markdown-gallery--grid\s*\{[\s\S]*?grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/u,
   );
-  assert.match(css, /\.markdown-gallery-slide\[hidden\]\s*\{[\s\S]*?display:\s*none/u);
-  assert.match(gallery, /event\.key === "ArrowLeft"/u);
-  assert.match(gallery, /event\.key === "ArrowRight"/u);
-  assert.match(gallery, /const DRAG_THRESHOLD = 44/u);
-  assert.match(gallery, /onPointerDown=\{handlePointerDown\}/u);
-  assert.match(gallery, /onPointerMove=\{handlePointerMove\}/u);
-  assert.match(gallery, /onPointerUp=\{finishDrag\}/u);
-  assert.match(gallery, /onClickCapture=/u);
-  assert.match(gallery, /aria-label="이전 사진"/u);
-  assert.match(gallery, /aria-label="다음 사진"/u);
+  assert.doesNotMatch(css, /markdown-gallery-(?:slide|slider|controls|arrow)/u);
+  assert.doesNotMatch(gallery, /use client|ArrowLeft|ArrowRight|PointerEvent/u);
 
   const response = await render("/writing/260804");
   assert.equal(response.status, 200);
   const html = await response.text();
   assert.match(html, /markdown-gallery markdown-gallery--grid/u);
-  assert.match(html, /markdown-gallery markdown-gallery--slider/u);
+  assert.doesNotMatch(html, /markdown-gallery markdown-gallery--slider/u);
 
   const imageTriggers =
     html.match(

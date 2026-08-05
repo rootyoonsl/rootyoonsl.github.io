@@ -143,14 +143,9 @@ const markdownComponents: Components = {
   div: (props) => {
     const { className, children, ...domProps } = withoutMarkdownNode(props);
     const classNames = className?.split(/\s+/u) ?? [];
-    const layout = classNames.includes("markdown-gallery-source--slider")
-      ? "slider"
-      : classNames.includes("markdown-gallery-source--grid")
-        ? "grid"
-        : null;
 
-    if (layout) {
-      return <MarkdownGallery layout={layout}>{children}</MarkdownGallery>;
+    if (classNames.includes("markdown-gallery-source--grid")) {
+      return <MarkdownGallery>{children}</MarkdownGallery>;
     }
 
     return (

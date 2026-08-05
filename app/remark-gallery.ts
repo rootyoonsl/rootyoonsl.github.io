@@ -12,18 +12,20 @@ type MarkdownRoot = MarkdownNode & {
   children: MarkdownNode[];
 };
 
-type GalleryLayout = "grid" | "slider";
+const gridOpeningPattern =
+  /^:::gallery(?:\s+layout\s*=\s*(?:"grid"|'grid'|grid))?\s*$/u;
 
-const galleryOpeningPattern =
-  /^:::gallery\s+layout\s*=\s*(?:"(grid|slider)"|'(grid|slider)'|(grid|slider))\s*$/u;
+function isGalleryOpening(value: string | undefined): boolean {
+  if (!value) return false;
 
-function galleryLayout(value: string | undefined): GalleryLayout | null {
-  if (!value) return null;
-
-  const match = value.trim().match(galleryOpeningPattern);
-  return (match?.[1] ?? match?.[2] ?? match?.[3] ?? null) as
-    | GalleryLayout
-    | null;
+  const marker = value.trim();
+  if (gridOpeningPattern.test(marker)) return true;
+  if (/^:::gallery\b/u.test(marker)) {
+    throw new Error(
+      "Only grid galleries are supported. Use :::gallery or :::gallery layout=\"grid\".",
+    );
+  }
+  return false;
 }
 
 function isClosingMarker(node: MarkdownNode): boolean {
@@ -35,16 +37,16 @@ function isClosingMarker(node: MarkdownNode): boolean {
   );
 }
 
-function paragraphMarker(node: MarkdownNode): GalleryLayout | null {
+function isParagraphMarker(node: MarkdownNode): boolean {
   if (
     node.type !== "paragraph" ||
     node.children?.length !== 1 ||
     node.children[0].type !== "text"
   ) {
-    return null;
+    return false;
   }
 
-  return galleryLayout(node.children[0].value);
+  return isGalleryOpening(node.children[0].value);
 }
 
 function galleryImages(node: MarkdownNode): MarkdownNode[] | null {
@@ -61,10 +63,7 @@ function galleryImages(node: MarkdownNode): MarkdownNode[] | null {
   return hasOnlyImagesAndWhitespace && images.length ? images : null;
 }
 
-function galleryNode(
-  layout: GalleryLayout,
-  images: MarkdownNode[],
-): MarkdownNode {
+function galleryNode(images: MarkdownNode[]): MarkdownNode {
   return {
     type: "paragraph",
     children: images,
@@ -73,7 +72,7 @@ function galleryNode(
       hProperties: {
         className: [
           "markdown-gallery-source",
-          `markdown-gallery-source--${layout}`,
+          "markdown-gallery-source--grid",
         ],
       },
     },
@@ -85,9 +84,10 @@ function inlineGallery(node: MarkdownNode): MarkdownNode | null {
 
   const first = node.children[0];
   const last = node.children.at(-1);
-  const layout = first.type === "text" ? galleryLayout(first.value) : null;
+  const hasOpening =
+    first.type === "text" && isGalleryOpening(first.value);
 
-  if (!layout || last?.type !== "text" || last.value?.trim() !== ":::") {
+  if (!hasOpening || last?.type !== "text" || last.value?.trim() !== ":::") {
     return null;
   }
 
@@ -100,7 +100,7 @@ function inlineGallery(node: MarkdownNode): MarkdownNode | null {
   );
 
   return hasOnlyImagesAndWhitespace && images.length
-    ? galleryNode(layout, images)
+    ? galleryNode(images)
     : null;
 }
 
@@ -113,8 +113,7 @@ export function remarkGalleryDirectives() {
         continue;
       }
 
-      const layout = paragraphMarker(tree.children[index]);
-      if (!layout) continue;
+      if (!isParagraphMarker(tree.children[index])) continue;
 
       const images: MarkdownNode[] = [];
       let closingIndex = index + 1;
@@ -137,7 +136,7 @@ export function remarkGalleryDirectives() {
       tree.children.splice(
         index,
         closingIndex - index + 1,
-        galleryNode(layout, images),
+        galleryNode(images),
       );
     }
   };

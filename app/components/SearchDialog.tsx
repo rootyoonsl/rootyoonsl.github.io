@@ -15,7 +15,6 @@ import {
   photos,
   posts,
 } from "@/app/content.generated";
-import { BOOKS } from "@/app/library-meta";
 
 type SearchItem = {
   category: "글" | "책" | "음악" | "사진";
@@ -47,18 +46,13 @@ export default function SearchDialog({
         href: `/writing/${encodeURIComponent(post.slug)}`,
         keywords: `${post.title} ${post.plainText}`,
       })),
-      ...books.map((book) => {
-        const author =
-          BOOKS.find((item) => item.href === book.url)?.author ?? "기록 중";
-
-        return {
-          category: "책" as const,
-          title: book.title,
-          detail: author,
-          href: book.url,
-          keywords: `${book.title} ${author}`,
-        };
-      }),
+      ...books.map((book) => ({
+        category: "책" as const,
+        title: book.title,
+        detail: book.author,
+        href: book.url,
+        keywords: `${book.title} ${book.author}`,
+      })),
       ...musics.map((track) => ({
         category: "음악" as const,
         title: track.title,

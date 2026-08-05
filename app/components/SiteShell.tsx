@@ -13,7 +13,7 @@ import {
   useState,
 } from "react";
 import { InteractiveCover } from "@/app/components/InteractiveCover";
-import { GITHUB_URL } from "@/app/library-meta";
+import { GITHUB_URL } from "@/app/site-config";
 
 type Theme = "sunset-light" | "sunset-dark" | "light" | "dark";
 type RouteMotion = "settled" | "from-home" | "to-home" | "between-spaces";

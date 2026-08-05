@@ -47,3 +47,6 @@ next-env.d.ts
 /public/post-images/
 /public/fonts/KaTeX_*.woff2
 /public/images/background.png
+
+# local-only publishing helper
+/블로그배포.command

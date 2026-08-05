@@ -2,7 +2,6 @@ import {
   books as sourceBooks,
   musics as sourceMusics,
 } from "@/app/content.generated";
-import { BOOKS } from "@/app/library-meta";
 import { MUSIC_LYRICS } from "@/app/music-lyrics";
 
 type CuratedBook = {
@@ -35,13 +34,11 @@ function youtubeIdFrom(url: string) {
 }
 
 export const CURATED_BOOKS: readonly CuratedBook[] = sourceBooks.map((item) => {
-  const verified = BOOKS.find((book) => book.href === item.url);
-
   return {
     title: item.title,
-    author: verified?.author ?? "기록 중",
+    author: item.author,
     href: item.url,
-    cover: verified?.cover ?? "/images/yoonsl.jpg",
+    cover: item.cover,
   };
 });
 

@@ -671,59 +671,104 @@ function normalizeBookUrl(url) {
   );
 }
 
-function unescapeMarkdownLabel(label) {
-  return label
-    .replace(/\\([\\`*{}[\]()#+\-.!_>])/gu, "$1")
-    .replace(/\u00A0/gu, " ")
-    .trim()
-    .normalize("NFC");
-}
-
-function parseCuratedLinks(markdown) {
+function parseBooks(markdown) {
   const lines = markdown.split(/\r?\n/u);
   const entries = [];
   const urls = new Set();
+  const titles = new Set();
+  let activeBook = null;
 
-  for (let index = 0; index < lines.length; index += 1) {
-    const linkLine = lines[index].trim();
-    const match =
-      /^\[((?:\\.|[^\]])*)\]\((https?:\/\/[^)\s]+)\)\s*$/u.exec(linkLine);
+  const finishBook = () => {
+    if (!activeBook) return;
 
-    if (!match) {
-      continue;
+    const missingFields = ["author", "url", "cover"].filter(
+      (field) => !activeBook[field],
+    );
+    if (missingFields.length) {
+      throw new Error(
+        `Book "${activeBook.title}" is missing: ${missingFields.join(", ")}`,
+      );
     }
 
-    const label = unescapeMarkdownLabel(match[1]);
-    const inlineTitle = label.replace(/\s+-\s+교보문고\s*$/u, "").trim();
-    let titleIndex = index + 1;
-    while (titleIndex < lines.length && !lines[titleIndex].trim()) {
-      titleIndex += 1;
+    const url = normalizeBookUrl(activeBook.url);
+    let parsedBookUrl;
+    let parsedCoverUrl;
+    try {
+      parsedBookUrl = new URL(url);
+      parsedCoverUrl = new URL(activeBook.cover);
+    } catch {
+      throw new Error(`Book "${activeBook.title}" has an invalid URL.`);
     }
-
-    const nextContent =
-      titleIndex < lines.length ? normalizeCuratedLine(lines[titleIndex]) : "";
-    const usesInlineTitle = /\s+-\s+교보문고\s*$/u.test(label);
-    const title = usesInlineTitle ? inlineTitle : nextContent || inlineTitle;
 
     if (
-      !title ||
-      (!usesInlineTitle && /^\[[^\]]*\]\(https?:\/\//u.test(title))
+      parsedBookUrl.protocol !== "https:" ||
+      parsedBookUrl.hostname !== "product.kyobobook.co.kr"
     ) {
-      throw new Error(`A curated link is missing its title: ${match[2]}`);
+      throw new Error(
+        `Book "${activeBook.title}" must use a Kyobo product URL.`,
+      );
     }
-
-    const url = normalizeBookUrl(match[2]);
+    if (!/^https?:$/u.test(parsedCoverUrl.protocol)) {
+      throw new Error(`Book "${activeBook.title}" has an invalid cover URL.`);
+    }
     if (urls.has(url)) {
       throw new Error(`Duplicate book URL: ${url}`);
     }
+    if (titles.has(activeBook.title)) {
+      throw new Error(`Duplicate book title: ${activeBook.title}`);
+    }
 
     urls.add(url);
-    entries.push({ title, url });
-    if (!usesInlineTitle && title === nextContent) {
-      index = titleIndex;
+    titles.add(activeBook.title);
+    entries.push({
+      title: activeBook.title,
+      author: activeBook.author,
+      url,
+      cover: activeBook.cover,
+    });
+    activeBook = null;
+  };
+
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = normalizeCuratedLine(lines[index]);
+    if (!line || line === "# Booklists") {
+      continue;
     }
+
+    const headingMatch = /^##\s+(.+?)\s*#*$/u.exec(line);
+    if (headingMatch) {
+      finishBook();
+      activeBook = { title: cleanTitle(headingMatch[1]) };
+      continue;
+    }
+
+    if (!activeBook) {
+      throw new Error(
+        `Book metadata must follow a level-two title (line ${index + 1}).`,
+      );
+    }
+
+    const fieldMatch = /^-\s*(저자|교보문고|표지)\s*:\s*(.+)$/u.exec(line);
+    if (!fieldMatch) {
+      throw new Error(
+        `Invalid book metadata on line ${index + 1}: ${line}`,
+      );
+    }
+
+    const field = {
+      저자: "author",
+      교보문고: "url",
+      표지: "cover",
+    }[fieldMatch[1]];
+    if (activeBook[field]) {
+      throw new Error(
+        `Book "${activeBook.title}" repeats the ${fieldMatch[1]} field.`,
+      );
+    }
+    activeBook[field] = fieldMatch[2].trim();
   }
 
+  finishBook();
   return entries;
 }
 
@@ -1128,9 +1173,11 @@ type GeneratedPost = {
   body: string;
 };
 
-type CuratedBookLink = {
+type CuratedBook = {
   title: string;
+  author: string;
   url: string;
+  cover: string;
 };
 
 type CuratedMusicLink = {
@@ -1153,7 +1200,7 @@ export type GeneratedPhoto = {
 
 export const posts: GeneratedPost[] = ${serializeForTypeScript(posts)};
 
-export const books: CuratedBookLink[] = ${serializeForTypeScript(books)};
+export const books: CuratedBook[] = ${serializeForTypeScript(books)};
 
 export const musics: CuratedMusicLink[] = ${serializeForTypeScript(musics)};
 
@@ -1212,7 +1259,7 @@ async function main() {
       readFile(musicLyricsFile, "utf8"),
       collectGalleryPhotos(),
     ]);
-  const books = parseCuratedLinks(booksMarkdown);
+  const books = parseBooks(booksMarkdown);
   const musics = parseMusicLinks(musicsMarkdown);
   const { lyricsByYoutubeId, missingTracks } = parseMusicLyrics(
     musicLyricsMarkdown,
